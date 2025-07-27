@@ -7,34 +7,25 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
 
-        /* --- KEYFRAME ANIMATIONS from Analytics page --- */
         @keyframes background-pan {
             0% { transform: scale(1.05) translate(0, 0); }
             50% { transform: scale(1.15) translate(1%, -1%); }
             100% { transform: scale(1.05) translate(0, 0); }
         }
-
-        /* Register custom property for smooth gradient animation */
         @property --angle {
             syntax: '<angle>';
             initial-value: 0deg;
             inherits: false;
         }
-
-        /* Animation for the RGB border effect */
         @keyframes rgb-border-spin {
             to {
                 --angle: 360deg;
             }
         }
-
-        /* Existing fadeIn for overall content */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); } /* Adjusted translateY for smoother fade */
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* --- BASE & BODY STYLES (Adapted from Analytics) --- */
         * {
             margin: 0;
             padding: 0;
@@ -45,21 +36,17 @@
         }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: url('simulation1.png') no-repeat center center fixed; /* PRESERVED BACKGROUND */
-            background-size: cover; /* PRESERVED BACKGROUND SIZE */
-            color: #e2e8f0; /* Dark theme text color */
-            text-shadow: 0 1px 3px rgba(0,0,0,0.5); /* Text shadow for better contrast */
+            background: url('simulation1.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #e2e8f0;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
         }
-
-        /* --- MULTI-LAYERED BACKGROUND (Adapted for custom background image) --- */
-        /* This container acts as the blur/grayscale layer *over* your background image */
         .background-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             z-index: -1;
-            background-color: #0c1322; /* Fallback for initial load, less visible with image */
-            /* No background-image here, as body handles it */
-            filter: blur(3px) grayscale(60%) brightness(0.6); /* Apply blur/grayscale to the background image */
+            background-color: #0c1322;
+            filter: blur(3px) grayscale(60%) brightness(0.6);
             animation: background-pan 45s ease-in-out infinite;
         }
         .page-container {
@@ -69,10 +56,8 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            animation: fadeIn 1s ease-out; /* Apply fadeIn to the content container */
+            animation: fadeIn 1s ease-out;
         }
-
-        /* --- NAVIGATION BAR (from Analytics page) --- */
         #navbar {
             background: rgba(12, 19, 34, 0.6);
             backdrop-filter: blur(16px);
@@ -84,6 +69,12 @@
             display: flex;
             align-items: center;
             height: 70px;
+            justify-content: space-between;
+        }
+        #navbar .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         .nav-item {
             display: inline-flex;
@@ -95,6 +86,7 @@
             font-weight: 500;
             border-radius: 8px;
             transition: color 0.3s ease, background-color 0.3s ease;
+            white-space: nowrap;
         }
         .nav-item:hover {
             color: #fff;
@@ -102,26 +94,45 @@
         }
         .nav-item .icon {
             font-size: 1.2rem;
-            color: #2dd4bf; /* Teal icon color */
+            color: #2dd4bf;
         }
         .logout-btn {
             margin-left: auto;
         }
         .logout-btn .icon {
-            color: #f87171; /* Red icon color for logout */
+            color: #f87171;
         }
         .logout-btn:hover {
             background-color: rgba(239, 68, 68, 0.1);
         }
-
-        /* --- MAIN CONTENT & SECTION STYLES (adapted from Analytics) --- */
+        #hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 28px;
+            height: 24px;
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            right: 1.5rem;
+            transform: translateY(-50%);
+            z-index: 1100;
+        }
+        #hamburger span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: #cbd5e1;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
         main {
             padding: 4rem 2rem;
             flex-grow: 1;
             display: flex;
-            justify-content: center; /* Center the profile container */
-            align-items: center; /* Center vertically if space allows */
-            min-height: calc(100vh - 70px - 64px); /* Subtract nav and footer height */
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 70px - 64px);
         }
         .section-title {
             font-size: 2.5rem;
@@ -129,78 +140,119 @@
             text-align: center;
             margin-bottom: 3rem;
             color: #fff;
-            padding-top: 1rem; /* Add some padding from top */
+            padding-top: 1rem;
         }
-
-        /* --- PROFILE CONTAINER (adapted from Analytics Card) --- */
         .profile-container {
             max-width: 800px;
-            width: 100%; /* Ensure it takes full width up to max-width */
-            margin: 2rem auto; /* Vertical margin remains, horizontal centers */
-            padding: 2.5rem 3rem; /* More generous padding */
-            background: rgba(30, 41, 59, 0.85); /* Similar to analysis-card background */
+            width: 100%;
+            margin: 2rem auto;
+            padding: 2.5rem 3rem;
+            background: rgba(30, 41, 59, 0.85);
             backdrop-filter: blur(10px);
-            border-radius: 16px; /* Larger radius for consistency */
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4); /* Stronger shadow */
-            
-            /* --- RGB Lighting Animation --- */
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
             border-width: 2px;
             border-style: solid;
             border-image-slice: 1;
             border-image-source: conic-gradient(from var(--angle), #ff00c8, #7a00ff, #002bff, #00ffd5, #48ff00, #fffb00, #ff7300, #ff0000, #ff00c8);
             animation: rgb-border-spin 4s linear infinite;
         }
-
         .profile-header {
             text-align: center;
-            margin-bottom: 2.5rem; /* More space below header */
+            margin-bottom: 2.5rem;
         }
         .profile-header h2 {
-            font-size: 2.2rem; /* Larger font size */
+            font-size: 2.2rem;
             margin-bottom: 0.75rem;
-            color: #fff; /* White for main titles */
+            color: #fff;
         }
         .profile-header p {
-            color: #cbd5e1; /* Lighter grey for subtitle */
+            color: #cbd5e1;
             font-size: 1.1rem;
         }
-
         .profile-section {
-            margin-bottom: 1.8rem; /* Consistent spacing */
+            margin-bottom: 1.8rem;
         }
         .profile-section label {
             font-weight: 600;
             display: block;
-            margin-bottom: 0.5rem; /* More space below label */
-            color: #94a3b8; /* A subtle grey from analytics theme */
+            margin-bottom: 0.5rem;
+            color: #94a3b8;
             font-size: 0.95rem;
         }
         .profile-section p {
-            background: rgba(30, 41, 59, 0.7); /* Darker background for text fields */
+            background: rgba(30, 41, 59, 0.7);
             color: #e2e8f0;
-            padding: 0.9rem 1.2rem; /* More padding for fields */
-            border-radius: 8px; /* Consistent radius */
+            padding: 0.9rem 1.2rem;
+            border-radius: 8px;
             margin: 0;
-            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        /* --- FOOTER (from Analytics page) --- */
         footer {
             background: transparent;
             color: #64748b;
             text-align: center;
             padding: 2rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: auto; /* Push footer to bottom */
+            margin-top: auto;
+        }
+        @media (max-width: 900px) {
+            .profile-container {
+                padding: 1.5rem 1rem;
+            }
+            main {
+                padding: 2rem 0.5rem;
+            }
+        }
+        @media (max-width: 768px) {
+            #navbar {
+                padding: 0 0.5rem;
+            }
+            #navbar .nav-links {
+                position: fixed;
+                top: 70px;
+                right: 0;
+                width: 220px;
+                height: calc(100vh - 70px);
+                background: rgba(12,19,34,0.97);
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem;
+                gap: 1rem;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                box-shadow: -4px 0 10px rgba(0,0,0,0.4);
+                z-index: 1050;
+            }
+            #navbar .nav-links.active {
+                transform: translateX(0);
+            }
+            .nav-item {
+                width: 100%;
+                padding: 1rem 1.5rem;
+                font-size: 1.1rem;
+            }
+            #hamburger {
+                display: flex;
+            }
+            #navbar {
+                justify-content: flex-end;
+            }
         }
     </style>
-    <link rel="stylesheet" href="responsive.css" />
 </head>
 <body>
 
 <div class="background-overlay"></div>
 <div class="page-container">
-    <nav id="navbar"></nav>
+    <nav id="navbar">
+        <div id="hamburger" aria-label="Toggle navigation menu" role="button" tabindex="0">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="nav-links"></div>
+    </nav>
 
     <main>
         <div class="profile-container">
@@ -209,26 +261,22 @@
                 <h2>Pratap Reddy</h2>
                 <p>Lead IoT & Warehouse Safety Officer</p>
             </div>
-
             <div class="profile-section">
                 <label>Email</label>
-                <p id="email-display"></p> </div>
-
+                <p id="email-display"></p> 
+            </div>
             <div class="profile-section">
                 <label>Role</label>
                 <p>Admin | System Monitoring & Robot Management</p>
             </div>
-
             <div class="profile-section">
                 <label>Shift Timing</label>
                 <p>Morning Shift: 8:30 AM – 6:00 PM</p>
             </div>
-
             <div class="profile-section">
                 <label>Last Login</label>
                 <p>09 July 2025, 09:10 AM</p>
             </div>
-
             <div class="profile-section">
                 <label>Access Level</label>
                 <p>Full Access - Can manage sensors, simulation, alerts, and export logs.</p>
@@ -243,44 +291,61 @@
 
 <script>
     const role = (localStorage.getItem("role") || "").toLowerCase();
-    const email = localStorage.getItem("email"); // Get email from localStorage
+    const email = localStorage.getItem("email");
 
-    // Redirect if not authorized
     if (!role || role !== "admin") {
         alert("Unauthorized access! Redirecting to login.");
         window.location.href = "login.html";
     }
 
-    // Set the email display using the 'email' variable
-    document.getElementById("email-display").textContent = email || "Not available"; 
+    document.getElementById("email-display").textContent = email || "Not available";
 
-    // --- DYNAMIC NAVIGATION BAR ---
-    const navbar = document.getElementById("navbar");
+    // Add icons for each menu item
     const navConfig = {
         admin: [
-          { href: 'index.html', icon: '📥', text: 'Input' },
+            { href: 'index.html', icon: '📥', text: 'Input' },
             { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
             { href: 'simulation.html', icon: '⚙️', text: 'Simulation' },
             { href: 'analytics.html', icon: '📈', text: 'Analytics' },
             { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
-             { href: 'admin_approval.html', icon: '✅', text: 'Approvals' },
-              { href: 'about.html', icon: 'ℹ️', text: 'About' },
+            { href: 'admin_approval.html', icon: '✅', text: 'Approvals' },
+            { href: 'about.html', icon: 'ℹ️', text: 'About' },
             { href: 'contact.html', icon: '📞', text: 'Contact Us' },
             { href: 'admin.html', icon: '👤', text: 'My Profile' }
         ],
-        // Add other roles if they exist for admin page too, though typically admin.html is specific
     };
-    
-    let links = `<a href="home.html" class="nav-item"><span class="icon">🏠</span><span>Home</span></a>`;
 
+    const navLinksContainer = document.querySelector("#navbar .nav-links");
+
+    // Build links HTML with icons
+    let links = `<a href="home.html" class="nav-item"><span class="icon">🏠</span><span>Home</span></a>`;
     if (navConfig[role]) {
         navConfig[role].forEach(link => {
             links += `<a href="${link.href}" class="nav-item"><span class="icon">${link.icon}</span><span>${link.text}</span></a>`;
         });
     }
-
     links += `<a href="#" onclick="logout()" class="nav-item logout-btn"><span class="icon">🚪</span><span>Logout</span></a>`;
-    navbar.innerHTML = links;
+    navLinksContainer.innerHTML = links;
+
+    const hamburger = document.getElementById('hamburger');
+
+    // Toggle mobile nav
+    hamburger.addEventListener('click', () => {
+        navLinksContainer.classList.toggle('active');
+    });
+    hamburger.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            navLinksContainer.classList.toggle('active');
+        }
+    });
+
+    // Ensure closing nav on any link click (only on mobile)
+    navLinksContainer.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinksContainer.classList.remove('active');
+        });
+    });
 
     function logout() {
         localStorage.clear();
