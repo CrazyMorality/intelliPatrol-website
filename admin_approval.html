@@ -4,12 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IntelliPatrol - Admin User Approval</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Orbitron:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Orbitron:wght@400;500;600;700;900&display=swap"
+    rel="stylesheet"
+  />
   <style>
     /* Keyframe Animations */
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     @keyframes float {
       0%, 100% { transform: translateY(0); }
@@ -20,8 +29,14 @@
       50% { opacity: 0.45; transform: scale(1.02); }
     }
     @keyframes slideInLeft {
-      from { opacity: 0; transform: translateX(-30px); }
-      to { opacity: 1; transform: translateX(0); }
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
     @keyframes toastShow {
       from {
@@ -36,7 +51,9 @@
 
     /* Base styles */
     * {
-      margin: 0; padding: 0; box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
     html {
       scroll-behavior: smooth;
@@ -97,6 +114,12 @@
       font-size: 1.1rem;
       font-family: 'Inter', sans-serif;
     }
+    #nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-grow: 1;
+    }
     #navbar a {
       display: inline-flex;
       align-items: center;
@@ -112,9 +135,6 @@
       color: #a855f7;
       transform: translateY(-1.8px);
     }
-    #navbar a .icon {
-      font-size: 1.2rem;
-    }
     #navbar a.logout-btn {
       margin-left: auto;
       color: #f87171;
@@ -124,14 +144,36 @@
       color: #f43f5e;
     }
 
-    /* Header (used if needed) */
+    /* Hamburger Button */
+    #hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      margin-left: auto;
+    }
+    #hamburger:focus {
+      outline: none;
+    }
+    #hamburger span {
+      display: block;
+      width: 25px;
+      height: 3px;
+      margin: 5px 0;
+      background-color: #60a5fa;
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+
+    /* Header */
     header {
       padding: 1.5rem;
       font-weight: 700;
       font-size: 1.8rem;
       text-align: center;
       color: white;
-      text-shadow: 0 0 5px rgba(0,0,0,0.5);
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
       user-select: none;
       z-index: 10;
       position: relative;
@@ -147,7 +189,8 @@
       margin: 2.5rem auto 3rem;
       padding: 2.5rem 2rem 2rem;
       border-radius: 24px;
-      box-shadow: 0 25px 55px rgba(0,0,0,0.22), inset 0 0 0 1px rgba(255,255,255,0.12);
+      box-shadow: 0 25px 55px rgba(0, 0, 0, 0.22),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.12);
       animation: fadeInUp 1.2s ease forwards;
       color: #f0f0f0;
       position: relative;
@@ -166,7 +209,6 @@
       user-select: none;
       animation: fadeInUp 1.5s ease forwards;
     }
-
     .container h3 {
       text-align: center;
       font-weight: 600;
@@ -177,6 +219,7 @@
       font-family: 'Inter', sans-serif;
     }
 
+    /* Filter section */
     .filter-container {
       display: flex;
       justify-content: center;
@@ -185,7 +228,6 @@
       flex-wrap: wrap;
       animation: fadeInUp 1.3s ease forwards;
     }
-
     .filter-container select {
       padding: 10px 18px;
       border: 2px solid #a855f7;
@@ -199,7 +241,8 @@
       font-family: 'Poppins', sans-serif;
       user-select: none;
     }
-    .filter-container select:hover, .filter-container select:focus {
+    .filter-container select:hover,
+    .filter-container select:focus {
       background: rgba(255 255 255 / 0.45);
       border-color: #d8b4fe;
       outline: none;
@@ -213,20 +256,19 @@
       background: rgba(255, 255, 255, 0.1);
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
       animation: fadeInUp 1.4s ease forwards;
     }
-
     thead tr {
       background: rgba(168, 85, 247, 0.8);
       font-family: 'Orbitron', monospace;
       color: #f3f4f6;
       user-select: none;
     }
-
-    th, td {
+    th,
+    td {
       padding: 0.95rem 1.2rem;
-      border-bottom: 1px solid rgba(255,255,255,0.15);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
       text-align: center;
       font-weight: 600;
       font-size: 1rem;
@@ -255,10 +297,20 @@
       box-shadow: 0 0 8px #a855f7bb;
       background: linear-gradient(135deg, #a855f7, #6b21a8);
     }
-    .role-admin { background: #4338ca; }
-    .role-user { background: #22c55e; }
-    .role-customer { background: #facc15; color: black; }
-    .role-stakeholder { background: #38bdf8; color: black; }
+    .role-admin {
+      background: #4338ca;
+    }
+    .role-user {
+      background: #22c55e;
+    }
+    .role-customer {
+      background: #facc15;
+      color: black;
+    }
+    .role-stakeholder {
+      background: #38bdf8;
+      color: black;
+    }
 
     /* Status badges */
     .status-badge {
@@ -301,22 +353,28 @@
       font-size: 1rem;
       color: white;
       user-select: none;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
       min-width: 84px;
       text-transform: uppercase;
       letter-spacing: 0.06em;
     }
     button:hover {
       transform: scale(1.08);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
     }
     button:active {
       transform: scale(1);
-      box-shadow: 0 3px 8px rgba(0,0,0,0.20);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
     }
-    .approve-btn { background: #22c55e; }
-    .reject-btn { background: #f43f5e; }
-    .delete-btn { background: #7c3aed; }
+    .approve-btn {
+      background: #22c55e;
+    }
+    .reject-btn {
+      background: #f43f5e;
+    }
+    .delete-btn {
+      background: #7c3aed;
+    }
 
     /* Footer */
     footer {
@@ -329,7 +387,7 @@
       font-family: 'Inter', sans-serif;
       font-size: 1rem;
       user-select: none;
-      box-shadow: inset 0 1px 5px rgba(255,255,255,0.1);
+      box-shadow: inset 0 1px 5px rgba(255, 255, 255, 0.1);
     }
 
     /* Toast notifications */
@@ -386,6 +444,38 @@
       .filter-container select {
         min-width: 120px;
       }
+      #hamburger {
+        display: block;
+      }
+      #nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        margin-top: 0.5rem;
+        background: rgba(12, 19, 34, 0.95);
+        border-radius: 8px;
+        padding: 0.5rem 0;
+      }
+      #nav-links.active {
+        display: flex;
+      }
+      #navbar {
+        flex-wrap: wrap;
+        padding: 0 1rem;
+        height: auto;
+      }
+      .nav-item {
+        display: block;
+        padding: 1rem 2rem;
+        margin: 0.2rem 1rem;
+        border-radius: 6px;
+      }
+      .logout-btn {
+        margin-left: 0;
+        width: 100%;
+        text-align: left;
+        margin-top: 0.2rem;
+      }
     }
     @media (max-width: 480px) {
       .container {
@@ -419,8 +509,21 @@
   <div class="particle"></div>
   <div class="particle"></div>
 
-  <!-- Dynamic Role-Based Navbar -->
-  <nav id="navbar"></nav>
+  <!-- Dynamic Navbar -->
+  <nav id="navbar" role="navigation" aria-label="Main Navigation">
+    <div id="nav-links" aria-expanded="false"></div>
+    <button
+      id="hamburger"
+      aria-label="Toggle navigation"
+      aria-controls="nav-links"
+      aria-expanded="false"
+      aria-haspopup="true"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
 
   <!-- Optional header -->
   <header>IntelliPatrol - User Approval Panel</header>
@@ -428,9 +531,9 @@
   <div class="container">
     <h2>User Approvals</h2>
 
-    <h3>🔎 Filter Users by Role & Status</h3>
+    <h3>🔎 Filter Users by Role &amp; Status</h3>
     <div class="filter-container">
-      <select id="roleFilter" onchange="filterTable()">
+      <select id="roleFilter" aria-label="Filter users by role" onchange="filterTable()">
         <option value="all">All Roles</option>
         <option value="admin">Admin</option>
         <option value="user">User</option>
@@ -438,7 +541,7 @@
         <option value="stakeholder">Stakeholder</option>
       </select>
 
-      <select id="statusFilter" onchange="filterTable()">
+      <select id="statusFilter" aria-label="Filter users by status" onchange="filterTable()">
         <option value="all">All Status</option>
         <option value="approved">Approved</option>
         <option value="pending">Pending</option>
@@ -446,13 +549,13 @@
       </select>
     </div>
 
-    <table id="userTable" aria-label="User approvals table">
+    <table id="userTable" aria-label="User approvals table" role="grid">
       <thead>
         <tr>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Status</th>
-          <th>Actions</th>
+          <th scope="col">Email</th>
+          <th scope="col">Role</th>
+          <th scope="col">Status</th>
+          <th scope="col">Actions</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -464,7 +567,7 @@
   </footer>
 
   <!-- Toast notification -->
-  <div id="toast" class="toast"></div>
+  <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true"></div>
 
   <script>
     // NAVBAR
@@ -475,28 +578,37 @@
     }
 
     const navbar = document.getElementById("navbar");
-    let links = `<a href="home.html" class="nav-item"><span class="icon">🏠</span><span>Home</span></a>`;
+    const navLinksContainer = document.getElementById("nav-links");
+    let links = '<a href="home.html" class="nav-item"><span class="icon">&#127968;</span><span>Home</span></a>';
     const navConfig = {
       admin: [
-        { href: 'index.html', icon: '📥', text: 'Input' },
-            { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
-            { href: 'simulation.html', icon: '⚙️', text: 'Simulation' },
-            { href: 'analytics.html', icon: '📈', text: 'Analytics' },
-            { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
-             { href: 'admin_approval.html', icon: '✅', text: 'Approvals' },
-              { href: 'about.html', icon: 'ℹ️', text: 'About' },
-            { href: 'contact.html', icon: '📞', text: 'Contact Us' },
-            { href: 'admin.html', icon: '👤', text: 'My Profile' }
-      ],
-      // Other roles could be added if needed
+        { href: 'index.html', icon: '&#128229;', text: 'Input' },
+        { href: 'dashboard.html', icon: '&#128202;', text: 'Dashboard' },
+        { href: 'simulation.html', icon: '&#9881;&#65039;', text: 'Simulation' },
+        { href: 'analytics.html', icon: '&#128200;', text: 'Analytics' },
+        { href: 'robot-map.html', icon: '&#128506;', text: 'Live Map' },
+        { href: 'admin_approval.html', icon: '&#9989;', text: 'Approvals' },
+        { href: 'about.html', icon: '&#8505;&#65039;', text: 'About' },
+        { href: 'contact.html', icon: '&#128222;', text: 'Contact Us' },
+        { href: 'admin.html', icon: '&#128100;', text: 'My Profile' }
+      ]
+      // Other roles omitted since only admin can view this page
     };
     if (navConfig[role]) {
       navConfig[role].forEach(link => {
         links += `<a href="${link.href}" class="nav-item"><span class="icon">${link.icon}</span><span>${link.text}</span></a>`;
       });
     }
-    links += `<a href="#" onclick="logout()" class="nav-item logout-btn"><span class="icon">🚪</span><span>Logout</span></a>`;
-    navbar.innerHTML = links;
+    links += `<a href="#" onclick="logout()" class="nav-item logout-btn"><span class="icon">&#128682;</span><span>Logout</span></a>`;
+    navLinksContainer.innerHTML = links;
+
+    // Hamburger toggle
+    const hamburger = document.getElementById("hamburger");
+    hamburger.addEventListener("click", () => {
+      const expanded = navLinksContainer.classList.toggle("active");
+      hamburger.setAttribute("aria-expanded", expanded);
+      navLinksContainer.setAttribute("aria-expanded", expanded);
+    });
 
     function logout() {
       localStorage.clear();
@@ -509,12 +621,12 @@
 
     let allUsers = [];
 
-    // Load users from backend
+    // Load users
     async function loadUsers() {
       try {
         const res = await fetch(listUrl, { method: "GET" });
         const data = await res.json();
-        allUsers = data.users;
+        allUsers = data.users || [];
         filterTable();
       } catch (err) {
         showToast("Error loading users", "error");
@@ -522,7 +634,7 @@
       }
     }
 
-    // Filter and render the users in table
+    // Filter and render
     function filterTable() {
       const tbody = document.querySelector("#userTable tbody");
       tbody.innerHTML = "";
@@ -535,12 +647,23 @@
         return roleMatch && statusMatch;
       });
 
+      if (filteredUsers.length === 0) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 4;
+        td.style.textAlign = "center";
+        td.textContent = "No users match the filter criteria.";
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        return;
+      }
+
       filteredUsers.forEach(user => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${user.user_id}</td>
-          <td><span class="role-badge role-${user.role.toLowerCase()}">${user.role}</span></td>
-          <td><span class="status-badge status-${user.status.toLowerCase()}">${user.status}</span></td>
+          <td>${user.user_id || "-"}</td>
+          <td><span class="role-badge role-${user.role.toLowerCase()}">${user.role || "-"}</span></td>
+          <td><span class="status-badge status-${user.status.toLowerCase()}">${user.status || "-"}</span></td>
           <td>
             <button class="approve-btn" onclick="updateStatus('${user.user_id}', 'approved')">Approve</button>
             <button class="reject-btn" onclick="updateStatus('${user.user_id}', 'rejected')">Reject</button>
@@ -576,10 +699,12 @@
       const toast = document.getElementById("toast");
       toast.className = `toast show ${type}`;
       toast.textContent = message;
-      setTimeout(() => { toast.className = "toast"; }, 3500);
+      setTimeout(() => {
+        toast.className = "toast";
+      }, 3500);
     }
 
-    // Init default filter values
+    // Initialize
     document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("roleFilter").value = "all";
       document.getElementById("statusFilter").value = "pending";
