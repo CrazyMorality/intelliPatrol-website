@@ -44,21 +44,19 @@
         }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: url('simulation1.png') no-repeat center center fixed; /* PRESERVED BACKGROUND */
-            background-size: cover; /* PRESERVED BACKGROUND SIZE */
-            color: #e2e8f0; /* Dark theme text color */
-            text-shadow: 0 1px 3px rgba(0,0,0,0.5); /* Text shadow for better contrast */
+            background: url('simulation1.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #e2e8f0;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
         }
 
-        /* --- MULTI-LAYERED BACKGROUND (Adapted for custom background image) --- */
-        /* This container acts as the blur/grayscale layer *over* your background image */
+        /* --- MULTI-LAYERED BACKGROUND --- */
         .background-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             z-index: -1;
-            background-color: #0c1322; /* Fallback for initial load, less visible with image */
-            /* No background-image here, as body handles it */
-            filter: blur(3px) grayscale(60%) brightness(0.6); /* Apply blur/grayscale to the background image */
+            background-color: #0c1322;
+            filter: blur(3px) grayscale(60%) brightness(0.6);
             animation: background-pan 45s ease-in-out infinite;
         }
         .page-container {
@@ -68,10 +66,10 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            animation: fadeIn 1s ease-out; /* Apply fadeIn to the content container */
+            animation: fadeIn 1s ease-out;
         }
 
-        /* --- NAVIGATION BAR (from Analytics page) --- */
+        /* --- NAVIGATION BAR --- */
         #navbar {
             background: rgba(12, 19, 34, 0.6);
             backdrop-filter: blur(16px);
@@ -83,6 +81,13 @@
             display: flex;
             align-items: center;
             height: 70px;
+            justify-content: space-between;
+            position: relative; /* For hamburger absolute positioning */
+        }
+        #navbar .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         .nav-item {
             display: inline-flex;
@@ -94,6 +99,7 @@
             font-weight: 500;
             border-radius: 8px;
             transition: color 0.3s ease, background-color 0.3s ease;
+            white-space: nowrap;
         }
         .nav-item:hover {
             color: #fff;
@@ -113,14 +119,37 @@
             background-color: rgba(239, 68, 68, 0.1);
         }
 
-        /* --- MAIN CONTENT & SECTION STYLES (adapted from Analytics) --- */
+        /* --- HAMBURGER MENU ICON --- */
+        #hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 28px;
+            height: 24px;
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            right: 1.5rem;
+            transform: translateY(-50%);
+            z-index: 1100;
+        }
+        #hamburger span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: #cbd5e1;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        /* --- MAIN CONTENT & SECTION STYLES --- */
         main {
             padding: 4rem 2rem;
             flex-grow: 1;
             display: flex;
-            justify-content: center; /* Center the profile container */
-            align-items: center; /* Center vertically if space allows */
-            min-height: calc(100vh - 70px - 64px); /* Subtract nav and footer height */
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 70px - 64px);
         }
         .section-title {
             font-size: 2.5rem;
@@ -128,77 +157,122 @@
             text-align: center;
             margin-bottom: 3rem;
             color: #fff;
-            padding-top: 1rem; /* Add some padding from top */
+            padding-top: 1rem;
         }
-
-        /* --- PROFILE CONTAINER (adapted from Analytics Card) --- */
         .profile-container {
             max-width: 800px;
-            width: 100%; /* Ensure it takes full width up to max-width */
-            margin: 2rem auto; /* Vertical margin remains, horizontal centers */
-            padding: 2.5rem 3rem; /* More generous padding */
-            background: rgba(30, 41, 59, 0.85); /* Similar to analysis-card background */
+            width: 100%;
+            margin: 2rem auto;
+            padding: 2.5rem 3rem;
+            background: rgba(30, 41, 59, 0.85);
             backdrop-filter: blur(10px);
-            border-radius: 16px; /* Larger radius for consistency */
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4); /* Stronger shadow */
-            
-            /* --- RGB Lighting Animation --- */
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
             border-width: 2px;
             border-style: solid;
             border-image-slice: 1;
             border-image-source: conic-gradient(from var(--angle), #ff00c8, #7a00ff, #002bff, #00ffd5, #48ff00, #fffb00, #ff7300, #ff0000, #ff00c8);
             animation: rgb-border-spin 4s linear infinite;
         }
-
         .profile-header {
             text-align: center;
-            margin-bottom: 2.5rem; /* More space below header */
+            margin-bottom: 2.5rem;
         }
         .profile-header h2 {
-            font-size: 2.2rem; /* Larger font size */
+            font-size: 2.2rem;
             margin-bottom: 0.75rem;
-            color: #fff; /* White for main titles */
+            color: #fff;
         }
         .profile-header p {
-            color: #cbd5e1; /* Lighter grey for subtitle */
+            color: #cbd5e1;
             font-size: 1.1rem;
         }
-
         .profile-section {
-            margin-bottom: 1.8rem; /* Consistent spacing */
+            margin-bottom: 1.8rem;
         }
         .profile-section label {
             font-weight: 600;
             display: block;
-            margin-bottom: 0.5rem; /* More space below label */
-            color: #94a3b8; /* A subtle grey from analytics theme */
+            margin-bottom: 0.5rem;
+            color: #94a3b8;
             font-size: 0.95rem;
         }
         .profile-section p {
-            background: rgba(30, 41, 59, 0.7); /* Darker background for text fields */
+            background: rgba(30, 41, 59, 0.7);
             color: #e2e8f0;
-            padding: 0.9rem 1.2rem; /* More padding for fields */
-            border-radius: 8px; /* Consistent radius */
+            padding: 0.9rem 1.2rem;
+            border-radius: 8px;
             margin: 0;
-            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* --- FOOTER (from Analytics page) --- */
+        /* --- FOOTER --- */
         footer {
             background: transparent;
             color: #64748b;
             text-align: center;
             padding: 2rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: auto; /* Push footer to bottom */
+            margin-top: auto;
+        }
+
+        /* --- MOBILE RESPONSIVE STYLES --- */
+        @media (max-width: 900px) {
+            .profile-container {
+                padding: 1.5rem 1rem;
+            }
+            main {
+                padding: 2rem 0.5rem;
+            }
+        }
+        @media (max-width: 768px) {
+            #navbar {
+                padding: 0 0.5rem;
+                justify-content: flex-end;
+            }
+            #navbar .nav-links {
+                position: fixed;
+                top: 70px;
+                right: 0;
+                width: 220px;
+                height: calc(100vh - 70px);
+                background: rgba(12,19,34,0.97);
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem;
+                gap: 1rem;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                box-shadow: -4px 0 10px rgba(0,0,0,0.4);
+                z-index: 1050;
+            }
+            #navbar .nav-links.active {
+                transform: translateX(0);
+            }
+            .nav-item {
+                width: 100%;
+                padding: 1rem 1.5rem;
+                font-size: 1.1rem;
+            }
+            #hamburger {
+                display: flex;
+            }
         }
     </style>
-    <link rel="stylesheet" href="responsive.css" />
 </head>
 <body>
     <div class="background-overlay"></div>
     <div class="page-container">
-        <nav id="navbar"></nav>
+        <nav id="navbar">
+            <!-- Hamburger Menu -->
+            <div id="hamburger" aria-label="Toggle navigation menu" role="button" tabindex="0">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <!-- Nav links container -->
+            <div class="nav-links"></div>
+        </nav>
 
         <main>
             <div class="profile-container">
@@ -215,7 +289,7 @@
 
                 <div class="profile-section">
                     <label>Subscription Plan</label>
-                    <p>Premium Monitoring & Alerts</p>
+                    <p>Premium Monitoring &amp; Alerts</p>
                 </div>
 
                 <div class="profile-section">
@@ -231,14 +305,14 @@
         </main>
 
         <footer>
-            &copy; 2025 IntelliPatrol - A TCS Digital Engineering Initiative
+            &copy; 2025 IntelliPatrol - A  Digital Engineering Initiative
         </footer>
     </div>
 
     <script>
         const role = localStorage.getItem("role");
         const userName = localStorage.getItem("user_id"); // Assuming user_id stores the name/identifier
-        const userEmail = localStorage.getItem("email"); // Get the email from localStorage
+        const userEmail = localStorage.getItem("email");
 
         if (role !== 'customer') {
             alert("Unauthorized access! Redirecting to login.");
@@ -247,30 +321,54 @@
 
         document.getElementById("customerName").textContent = userName || "Customer";
         document.getElementById("email").textContent = userEmail || "Not available";
-        document.getElementById("lastLogin").textContent = new Date().toLocaleString(); // Current time for last login
+        document.getElementById("lastLogin").textContent = new Date().toLocaleString();
 
-        const navbar = document.getElementById("navbar");
-        let links = `<a href="home.html" class="nav-item"><span class="icon">🏠</span><span>Home</span></a>`;
-        
+        const navbarLinksContainer = document.querySelector("#navbar .nav-links");
+
         const navConfig = {
             customer: [
                 { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
                 { href: 'simulation.html', icon: '⚙️', text: 'Simulation' },
                 { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
                 { href: 'about.html', icon: 'ℹ️', text: 'About' },
-            { href: 'contact.html', icon: '📞', text: 'Contact Us' },
-                { href: 'customer_profile.html', icon: '👤', text: 'My Profile' },
-                
+                { href: 'contact.html', icon: '📞', text: 'Contact Us' },
+                { href: 'customer_profile.html', icon: '👤', text: 'My Profile' }
             ]
         };
 
+        // Build nav links with icons
+        let linksHTML = `<a href="home.html" class="nav-item"><span class="icon">🏠</span><span>Home</span></a>`;
+
         if (navConfig[role]) {
             navConfig[role].forEach(link => {
-                links += `<a href="${link.href}" class="nav-item"><span class="icon">${link.icon}</span><span>${link.text}</span></a>`;
+                linksHTML += `<a href="${link.href}" class="nav-item"><span class="icon">${link.icon}</span><span>${link.text}</span></a>`;
             });
         }
-        links += `<a href="#" onclick="logout()" class="nav-item logout-btn"><span class="icon">🚪</span><span>Logout</span></a>`;
-        navbar.innerHTML = links;
+
+        linksHTML += `<a href="#" onclick="logout()" class="nav-item logout-btn"><span class="icon">🚪</span><span>Logout</span></a>`;
+
+        navbarLinksContainer.innerHTML = linksHTML;
+
+        const hamburger = document.getElementById('hamburger');
+
+        // Toggle mobile nav menu
+        hamburger.addEventListener('click', () => {
+            navbarLinksContainer.classList.toggle('active');
+        });
+        // Accessibility: toggle nav via keyboard
+        hamburger.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                navbarLinksContainer.classList.toggle('active');
+            }
+        });
+
+        // Close mobile nav menu on link click
+        navbarLinksContainer.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navbarLinksContainer.classList.remove('active');
+            });
+        });
 
         function logout() {
             localStorage.clear();
