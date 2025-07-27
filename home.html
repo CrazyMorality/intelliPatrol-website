@@ -7,7 +7,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
 
-        /* --- KEYFRAME ANIMATIONS --- */
         @keyframes background-pan {
             0% { transform: scale(1.05) translate(0, 0); }
             50% { transform: scale(1.15) translate(1%, -1%); }
@@ -21,8 +20,6 @@
             from { opacity: 0; transform: translateY(50px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* RGB Border Animation Property & Keyframes */
         @property --angle {
             syntax: '<angle>';
             initial-value: 0deg;
@@ -33,8 +30,6 @@
                 --angle: 360deg;
             }
         }
-
-        /* --- BASE & BODY STYLES --- */
         * {
             margin: 0;
             padding: 0;
@@ -45,17 +40,14 @@
         }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #0c1322; /* Dark fallback color */
+            background-color: #0c1322;
             color: #e2e8f0;
             text-shadow: 0 1px 3px rgba(0,0,0,0.5);
         }
-
-        /* --- MULTI-LAYERED BACKGROUND --- */
         .background-container {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             z-index: -1;
-            /* Using a placeholder image from Unsplash. Replace with your 'IntelliPatrolBackground.png' if available. */
             background-image: url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
@@ -65,13 +57,11 @@
         .page-container {
             position: relative;
             z-index: 1;
-            background: linear-gradient(180deg, rgba(12, 19, 34, 0.9) 0%, rgba(12, 19, 34, 0.95) 100%); /* Slightly adjusted gradient */
-            min-height: 100vh; /* Ensure full viewport height */
-            display: flex; /* Make it a flex container */
-            flex-direction: column; /* Stack children vertically */
+            background: linear-gradient(180deg, rgba(12, 19, 34, 0.9) 0%, rgba(12, 19, 34, 0.95) 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-
-        /* --- NAVIGATION BAR --- */
         #navbar {
             background: rgba(12, 19, 34, 0.6);
             backdrop-filter: blur(16px);
@@ -83,6 +73,13 @@
             display: flex;
             align-items: center;
             height: 70px;
+            gap: 0.5rem;
+        }
+        #nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-grow: 1;
         }
         .nav-item {
             display: inline-flex;
@@ -112,19 +109,36 @@
         .logout-btn:hover {
             background-color: rgba(239, 68, 68, 0.1);
         }
-
-        /* --- WELCOME HERO SECTION --- */
+        #hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-left: auto;
+        }
+        #hamburger:focus {
+            outline: none;
+        }
+        #hamburger span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px 0;
+            background-color: #2dd4bf;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
         .welcome-hero {
-            padding: 8rem 2rem 6rem; /* More vertical padding */
+            padding: 8rem 2rem 6rem;
             text-align: center;
             position: relative;
             overflow: hidden;
-            /* RGB Border for Hero Section */
             border-width: 2px;
             border-style: solid;
             border-image-slice: 1;
             border-image-source: conic-gradient(from var(--angle), #ff00c8, #7a00ff, #002bff, #00ffd5, #48ff00, #fffb00, #ff7300, #ff0000, #ff00c8);
-            animation: rgb-border-spin 8s linear infinite; /* Slower spin for hero */
+            animation: rgb-border-spin 8s linear infinite;
         }
         .hero-content {
             max-width: 900px;
@@ -132,18 +146,18 @@
             animation: slideInUp 1s ease-out forwards;
         }
         .hero-content h1 {
-            font-size: 3.8rem; /* Larger font */
+            font-size: 3.8rem;
             font-weight: 900;
             margin-bottom: 0.75rem;
             color: #fff;
             position: relative;
-            background: linear-gradient(90deg, #2dd4bf, #3b82f6, #8b5cf6); /* Gradient text */
+            background: linear-gradient(90deg, #2dd4bf, #3b82f6, #8b5cf6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-size: 200% auto;
             animation: text-shimmer 5s infinite linear;
         }
-        .hero-content h1::before { /* Animated light trail behind text */
+        .hero-content h1::before {
             content: '';
             position: absolute;
             top: 50%;
@@ -163,46 +177,44 @@
         }
 
         .hero-content #role-display {
-            font-size: 1.25rem; /* Larger font */
+            font-size: 1.25rem;
             color: #94a3b8;
             margin-bottom: 3rem;
         }
         .hero-content #role-display strong {
             text-transform: capitalize;
             font-weight: 700;
-            color: #3b82f6; /* Blue accent for role */
+            color: #3b82f6;
         }
         .cta-button {
             background: linear-gradient(135deg, #2dd4bf 0%, #3b82f6 100%);
             color: white;
             text-shadow: none;
             border: none;
-            padding: 1.2rem 3rem; /* Larger button */
+            padding: 1.2rem 3rem;
             font-size: 1.2rem;
             border-radius: 50px;
             cursor: pointer;
-            font-weight: 700; /* Bolder font */
+            font-weight: 700;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             text-decoration: none;
             box-shadow: 0 10px 30px rgba(45, 212, 191, 0.3);
-            display: inline-block; /* Allows padding and margin */
+            display: inline-block;
         }
         .cta-button:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 40px rgba(45, 212, 191, 0.4);
         }
-
-        /* --- INFO SECTIONS & FEATURE CARDS --- */
         .info-section {
-            padding: 5rem 2rem; /* More padding */
+            padding: 5rem 2rem;
         }
         .section-title {
-            font-size: 2.8rem; /* Larger title */
+            font-size: 2.8rem;
             font-weight: 800;
             text-align: center;
-            margin-bottom: 3.5rem; /* More space */
+            margin-bottom: 3.5rem;
             color: #fff;
-            background: linear-gradient(90deg, #00d2ff, #3a7bd5, #00d2ff); /* Gradient title */
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5, #00d2ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-size: 200% 100%;
@@ -223,21 +235,19 @@
         }
         .info-content {
             max-width: 900px;
-            margin: 0 auto 3.5rem auto; /* More margin */
+            margin: 0 auto 3.5rem auto;
             text-align: center;
-            font-size: 1.15rem; /* Slightly larger font */
+            font-size: 1.15rem;
             line-height: 1.8;
-            color: #cbd5e1; /* Lighter grey for better readability */
+            color: #cbd5e1;
             animation: slideInUp 1.2s ease-out forwards;
             animation-delay: 0.2s;
         }
-
-        /* New detailed info content style */
         .info-content-detailed {
             max-width: 1000px;
             margin: 0 auto;
             display: flex;
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            flex-wrap: wrap;
             justify-content: center;
             gap: 2.5rem;
             padding-bottom: 2rem;
@@ -245,7 +255,7 @@
         }
         .info-content-detailed > div {
             flex: 1;
-            min-width: 300px; /* Minimum width for each column */
+            min-width: 300px;
             background: rgba(30, 41, 59, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
@@ -261,7 +271,7 @@
         }
         .info-content-detailed h3 {
             font-size: 1.5rem;
-            color: #2dd4bf; /* Teal accent */
+            color: #2dd4bf;
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
@@ -272,62 +282,57 @@
             line-height: 1.7;
             font-size: 1.05rem;
         }
-
-
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Slightly wider cards */
-            gap: 2rem; /* More space between cards */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
             max-width: 1200px;
             margin: 0 auto;
-            padding-top: 1rem; /* Space from title */
+            padding-top: 1rem;
         }
         .feature-card {
             background: rgba(30, 41, 59, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
-            padding: 2.5rem; /* More padding */
+            padding: 2.5rem;
             backdrop-filter: blur(10px);
             transition-property: transform, box-shadow, border-color;
             transition-duration: 0.3s;
             transition-timing-function: ease;
-            position: relative; /* For the RGB effect */
-            overflow: hidden; /* Hide overflow of the pseudo-element */
+            position: relative;
+            overflow: hidden;
         }
-        /* Staggered animation delay for cards */
         .info-section.is-visible .feature-card:nth-child(1) { transition-delay: 0.1s; }
         .info-section.is-visible .feature-card:nth-child(2) { transition-delay: 0.2s; }
         .info-section.is-visible .feature-card:nth-child(3) { transition-delay: 0.3s; }
         .info-section.is-visible .feature-card:nth-child(4) { transition-delay: 0.4s; }
         .info-section.is-visible .feature-card:nth-child(5) { transition-delay: 0.5s; }
         .info-section.is-visible .feature-card:nth-child(6) { transition-delay: 0.6s; }
-
-        .feature-card::before { /* RGB border effect on hover */
+        .feature-card::before {
             content: '';
             position: absolute;
-            inset: -3px; /* Slightly expand to cover the original border */
-            border-radius: 18px; /* Match card border-radius + expansion */
-            padding: 2px; /* Controls the thickness of the gradient border */
+            inset: -3px;
+            border-radius: 18px;
+            padding: 2px;
             background: conic-gradient(from var(--angle, 0deg), #ff00c8, #7a00ff, #002bff, #00ffd5, #48ff00, #fffb00, #ff7300, #ff0000, #ff00c8);
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
             z-index: -1;
-            opacity: 0; /* Hidden by default */
+            opacity: 0;
             transition: opacity 0.3s ease;
         }
         .feature-card:hover::before {
             opacity: 1;
-            animation: rgb-border-spin 3s linear infinite; /* Faster spin on hover */
+            animation: rgb-border-spin 3s linear infinite;
         }
-
         .feature-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 0 50px rgba(45, 212, 191, 0.2);
-            border-color: transparent; /* Hide original border on hover */
+            border-color: transparent;
         }
         .feature-card h3 {
-            font-size: 1.35rem; /* Slightly larger title in card */
+            font-size: 1.35rem;
             margin-bottom: 0.75rem;
             color: #fff;
             display: flex;
@@ -336,40 +341,53 @@
         }
         .feature-card h3 .icon {
             font-size: 1.8rem;
-            color: #3b82f6; /* Blue icon */
+            color: #3b82f6;
         }
         .feature-card p {
             color: #94a3b8;
             line-height: 1.7;
         }
-
-        /* --- FOOTER --- */
         footer {
             background: transparent;
             color: #64748b;
             text-align: center;
             padding: 2rem;
-            margin-top: auto; /* Pushes footer to the bottom */
+            margin-top: auto;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        /* --- RESPONSIVE DESIGN --- */
         @media (max-width: 768px) {
             #navbar {
                 height: auto;
-                flex-wrap: wrap;
-                justify-content: center;
+                flex-wrap: nowrap;
                 padding: 1rem;
+                gap: 0;
+            }
+            #hamburger {
+                display: block;
+            }
+            #nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                margin-top: 0.5rem;
+                background: rgba(12, 19, 34, 0.95);
+                border-radius: 8px;
+                padding: 0.5rem 0;
+            }
+            #nav-links.active {
+                display: flex;
             }
             .nav-item {
-                padding: 0.6rem 0.8rem;
-                margin: 0.2rem;
+                display: block;
+                padding: 1rem 2rem;
+                margin: 0.2rem 1rem;
+                border-radius: 6px;
             }
             .logout-btn {
-                margin-left: unset; /* Remove auto margin on smaller screens */
+                margin-left: 0;
                 width: 100%;
-                text-align: center;
-                margin-top: 0.5rem;
+                text-align: left;
+                margin-top: 0.2rem;
             }
             .hero-content h1 {
                 font-size: 2.5rem;
@@ -392,7 +410,7 @@
                 font-size: 1rem;
             }
             .features-grid {
-                grid-template-columns: 1fr; /* Single column on small screens */
+                grid-template-columns: 1fr;
             }
             .feature-card {
                 padding: 1.5rem;
@@ -405,11 +423,16 @@
     </style>
 </head>
 <body>
-
 <div class="background-container"></div>
 <div class="page-container">
-    <nav id="navbar"></nav>
-
+    <nav id="navbar" role="navigation" aria-label="Main Navigation">
+        <div id="nav-links" aria-expanded="false"></div>
+        <button id="hamburger" aria-label="Toggle navigation" aria-controls="nav-links" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
     <main>
         <section class="welcome-hero">
             <div class="hero-content">
@@ -418,7 +441,6 @@
                 <a href="dashboard.html" class="cta-button">Go To Dashboard</a>
             </div>
         </section>
-
         <section class="info-section" id="about-section">
             <h2 class="section-title">What is IntelliPatrol?</h2>
             <p class="info-content">
@@ -426,159 +448,151 @@
             </p>
             <div class="info-content-detailed">
                 <div>
-                    <h3><span class="icon">🤖</span> Autonomous Navigation</h3>
+                    <h3><span class="icon">&#129302;</span> Autonomous Navigation</h3>
                     <p>Our robots are equipped with advanced SLAM technology and obstacle avoidance, enabling seamless navigation through complex warehouse layouts without human intervention.</p>
                 </div>
                 <div>
-                    <h3><span class="icon">📊</span> Data-Driven Insights</h3>
+                    <h3><span class="icon">&#128202;</span> Data-Driven Insights</h3>
                     <p>Beyond simple monitoring, IntelliPatrol collects vast amounts of environmental data, which is then transformed into actionable insights via powerful analytics tools.</p>
                 </div>
             </div>
         </section>
-
         <section class="info-section" id="features-section">
             <h2 class="section-title">Core Features at Your Fingertips</h2>
             <div class="features-grid">
                 <div class="feature-card">
-                    <h3><span class="icon">⚡</span> Real-time Monitoring</h3>
+                    <h3><span class="icon">&#9889;</span> Real-time Monitoring</h3>
                     <p>Instantaneous updates and comprehensive sensor readings displayed on a dynamic live dashboard for swift, informed decision-making.</p>
                 </div>
                 <div class="feature-card">
-                    <h3><span class="icon">🔔</span> Smart Alerts & Notifications</h3>
+                    <h3><span class="icon">&#128276;</span> Smart Alerts & Notifications</h3>
                     <p>Receive intelligent suggestions and critical alerts when environmental thresholds are breached, ensuring immediate response to potential hazards.</p>
                 </div>
                 <div class="feature-card">
-                    <h3><span class="icon">🔒</span> Secure Data Storage</h3>
+                    <h3><span class="icon">&#128274;</span> Secure Data Storage</h3>
                     <p>All sensor data is meticulously and securely stored in AWS DynamoDB, complete with a full, immutable audit trail for regulatory compliance and historical analysis.</p>
                 </div>
                 <div class="feature-card">
-                    <h3><span class="icon">📈</span> Actionable Analytics</h3>
+                    <h3><span class="icon">&#128200;</span> Actionable Analytics</h3>
                     <p>Leverage intuitive dashboards to analyze historical trends, visualize data through graphical reports, and proactively enhance warehouse safety protocols.</p>
                 </div>
                 <div class="feature-card">
-                    <h3><span class="icon">🌍</span> Live Robot Mapping</h3>
+                    <h3><span class="icon">&#127759;</span> Live Robot Mapping</h3>
                     <p>Track your IntelliPatrol robots in real-time on an interactive map, visualizing their routes, current locations, and sensor coverage areas.</p>
                 </div>
                 <div class="feature-card">
-                    <h3><span class="icon">🔬</span> Simulation Environment</h3>
+                    <h3><span class="icon">&#128300;</span> Simulation Environment</h3>
                     <p>Test and optimize robot routes and sensor configurations in a safe, virtual simulation environment before deploying changes to your physical robots.</p>
                 </div>
             </div>
         </section>
-
         <section class="info-section" id="technology-section">
             <h2 class="section-title">Robust Technology Stack</h2>
             <div class="info-content-detailed">
                 <div>
-                    <h3><span class="icon">☁️</span> Cloud Infrastructure</h3>
+                    <h3><span class="icon">&#9729;&#65039;</span> Cloud Infrastructure</h3>
                     <p>Powered by Amazon Web Services (AWS) for scalable, reliable, and secure cloud operations, ensuring high availability and performance.</p>
                 </div>
                 <div>
-                    <h3><span class="icon">🚀</span> Serverless Computing</h3>
+                    <h3><span class="icon">&#128640;</span> Serverless Computing</h3>
                     <p>Utilizes AWS Lambda for efficient, event-driven processing of sensor data, minimizing operational overhead and maximizing responsiveness.</p>
                 </div>
                 <div>
-                    <h3><span class="icon">🗄️</span> Database Management</h3>
+                    <h3><span class="icon">&#128451;</span> Database Management</h3>
                     <p>Data persistence and retrieval are handled by AWS DynamoDB, a fully managed NoSQL database service designed for high-performance applications.</p>
                 </div>
                 <div>
-                    <h3><span class="icon">🌐</span> Frontend Framework</h3>
+                    <h3><span class="icon">&#127760;</span> Frontend Framework</h3>
                     <p>Built with modern web standards, leveraging HTML, CSS, and JavaScript to deliver a responsive, intuitive, and engaging user experience across all devices.</p>
                 </div>
             </div>
         </section>
     </main>
-
     <footer>
-        &copy; 2025 IntelliPatrol - A  Digital Engineering Initiative
+        &copy; 2025 IntelliPatrol - A Digital Engineering Initiative
     </footer>
 </div>
-
 <script>
     // --- USER AUTHENTICATION & PERSONALIZATION ---
     const role = localStorage.getItem("role");
     const userName = localStorage.getItem("user_id"); // Assuming 'user_id' stores the user's name
-
     if (!role) {
-        window.location.href = "login.html"; // Redirect if no role found
+        window.location.href = "login.html";
     } else {
-        // Personalize Welcome Message (only name)
-        document.getElementById('welcome-message').textContent = `Welcome, ${userName || 'User'}!`;
-        document.getElementById('role-display').innerHTML = `Your access level: <strong>${role}</strong>`;
+        document.getElementById('welcome-message').textContent = "Welcome, " + (userName || "User") + "!";
+        document.getElementById('role-display').innerHTML = "Your access level: <strong>" + role + "</strong>";
     }
-
     // --- DYNAMIC NAVIGATION BAR ---
-    const navbar = document.getElementById("navbar");
-    let links = `<a href="home.html" class="nav-item"><span class="icon">🏠</span><span>Home</span></a>`;
-
+    const navLinksContainer = document.getElementById("nav-links");
+    let links = '<a href="home.html" class="nav-item"><span class="icon">&#127968;</span><span>Home</span></a>';
     const navConfig = {
         admin: [
-            { href: 'index.html', icon: '📥', text: 'Input' },
-            { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
-            { href: 'simulation.html', icon: '⚙️', text: 'Simulation' },
-            { href: 'analytics.html', icon: '📈', text: 'Analytics' },
-            { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
-             { href: 'admin_approval.html', icon: '✅', text: 'Approvals' },
-              { href: 'about.html', icon: 'ℹ️', text: 'About' },
-            { href: 'contact.html', icon: '📞', text: 'Contact Us' },
-            { href: 'admin.html', icon: '👤', text: 'My Profile' }
-            // Admin-specific link
+            { href: 'index.html', icon: '&#128229;', text: 'Input' },
+            { href: 'dashboard.html', icon: '&#128202;', text: 'Dashboard' },
+            { href: 'simulation.html', icon: '&#9881;&#65039;', text: 'Simulation' },
+            { href: 'analytics.html', icon: '&#128200;', text: 'Analytics' },
+            { href: 'robot-map.html', icon: '&#128506;', text: 'Live Map' },
+            { href: 'admin_approval.html', icon: '&#9989;', text: 'Approvals' },
+            { href: 'about.html', icon: '&#8505;&#65039;', text: 'About' },
+            { href: 'contact.html', icon: '&#128222;', text: 'Contact Us' },
+            { href: 'admin.html', icon: '&#128100;', text: 'My Profile' }
         ],
         user: [
-            { href: 'index.html', icon: '📥', text: 'Input' },
-            { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
-            { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
-             { href: 'about.html', icon: 'ℹ️', text: 'About' },
-            { href: 'contact.html', icon: '📞', text: 'Contact Us' },
-              { href: 'user_profile.html', icon: '👤', text: 'My Profile' }
+            { href: 'index.html', icon: '&#128229;', text: 'Input' },
+            { href: 'dashboard.html', icon: '&#128202;', text: 'Dashboard' },
+            { href: 'robot-map.html', icon: '&#128506;', text: 'Live Map' },
+            { href: 'about.html', icon: '&#8505;&#65039;', text: 'About' },
+            { href: 'contact.html', icon: '&#128222;', text: 'Contact Us' },
+            { href: 'user_profile.html', icon: '&#128100;', text: 'My Profile' }
         ],
         customer: [
-            { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
-            { href: 'simulation.html', icon: '⚙️', text: 'Simulation' },
-            { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
-             { href: 'about.html', icon: 'ℹ️', text: 'About' },
-            { href: 'contact.html', icon: '📞', text: 'Contact Us' },
-            { href: 'customer_profile.html', icon: '👤', text: 'My Profile' },
+            { href: 'dashboard.html', icon: '&#128202;', text: 'Dashboard' },
+            { href: 'simulation.html', icon: '&#9881;&#65039;', text: 'Simulation' },
+            { href: 'robot-map.html', icon: '&#128506;', text: 'Live Map' },
+            { href: 'about.html', icon: '&#8505;&#65039;', text: 'About' },
+            { href: 'contact.html', icon: '&#128222;', text: 'Contact Us' },
+            { href: 'customer_profile.html', icon: '&#128100;', text: 'My Profile' }
         ],
         stakeholder: [
-            { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
-            { href: 'analytics.html', icon: '📈', text: 'Analytics' },
-            { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
-             { href: 'about.html', icon: 'ℹ️', text: 'About' },
-            { href: 'contact.html', icon: '📞', text: 'Contact Us' },
-            { href: 'stakeholder_profile.html', icon: '👤', text: 'My Profile' }
+            { href: 'dashboard.html', icon: '&#128202;', text: 'Dashboard' },
+            { href: 'analytics.html', icon: '&#128200;', text: 'Analytics' },
+            { href: 'robot-map.html', icon: '&#128506;', text: 'Live Map' },
+            { href: 'about.html', icon: '&#8505;&#65039;', text: 'About' },
+            { href: 'contact.html', icon: '&#128222;', text: 'Contact Us' },
+            { href: 'stakeholder_profile.html', icon: '&#128100;', text: 'My Profile' }
         ]
     };
-    
     if (navConfig[role]) {
-        navConfig[role].forEach(link => {
-            links += `<a href="${link.href}" class="nav-item"><span class="icon">${link.icon}</span><span>${link.text}</span></a>`;
+        navConfig[role].forEach(function(link) {
+            links += '<a href="' + link.href + '" class="nav-item"><span class="icon">' + link.icon + '</span><span>' + link.text + '</span></a>';
         });
     }
-
-    links += `<a href="#" onclick="logout()" class="nav-item logout-btn"><span class="icon">🚪</span><span>Logout</span></a>`;
-    navbar.innerHTML = links;
-
+    links += '<a href="#" onclick="logout()" class="nav-item logout-btn"><span class="icon">&#128682;</span><span>Logout</span></a>';
+    navLinksContainer.innerHTML = links;
+    // Hamburger menu toggle
+    const hamburger = document.getElementById("hamburger");
+    hamburger.addEventListener("click", function() {
+        const expanded = navLinksContainer.classList.toggle("active");
+        hamburger.setAttribute("aria-expanded", expanded);
+        navLinksContainer.setAttribute("aria-expanded", expanded);
+    });
     function logout() {
-        localStorage.clear(); // Clears all stored items
-        window.location.href = "login.html"; // Redirect to login page
+        localStorage.clear();
+        window.location.href = "login.html";
     }
-
     // --- SCROLL-TRIGGERED ANIMATIONS ---
     const animatedSections = document.querySelectorAll('.info-section');
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
             if (entry.isIntersecting) {
                 entry.target.classList.add('is-visible');
-                observer.unobserve(entry.target); // Stop observing once visible
+                observer.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1 }); // Trigger when 10% of the section is visible
-
-    animatedSections.forEach(section => {
+    }, { threshold: 0.1 });
+    animatedSections.forEach(function(section) {
         observer.observe(section);
     });
 </script>
-
 </body>
 </html>
