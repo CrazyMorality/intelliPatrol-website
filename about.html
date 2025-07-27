@@ -60,13 +60,6 @@
       pointer-events: none;
     }
 
-    /* Floating particles for depth */
-    .particle {position:absolute;background:rgba(255,255,255,0.1);border-radius:50%;pointer-events:none;animation:float 8s infinite;z-index:2;}
-    .particle:nth-child(1){width:12px;height:12px;top:23%;left:12%;animation-delay:0s;}
-    .particle:nth-child(2){width:16px;height:16px;top:65%;left:79%;animation-delay:2.5s;}
-    .particle:nth-child(3){width:10px;height:10px;top:85%;left:21%;animation-delay:4s;}
-    .particle:nth-child(4){width:14px;height:14px;top:39%;left:66%;animation-delay:1.7s;}
-
     /* Dynamic Navbar */
     #navbar {
       background: rgba(12, 19, 34, 0.6);
@@ -75,15 +68,24 @@
       padding: 1.1rem 2rem;
       position: sticky;
       top: 0;
-      z-index: 1000;
+      z-index: 1100;
       display: flex;
       align-items: center;
       gap: 1rem;
       font-size: 1.09rem;
       animation: slideInLeft 0.8s ease;
+      justify-content: space-between;
+      position: relative; /* for absolute hamburger */
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
     .nav-item {
-      display: inline-flex; align-items: center; gap: 0.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
       padding: 0.75rem 1rem;
       color: #cbd5e1;
       text-decoration: none;
@@ -91,15 +93,103 @@
       border-radius: 8px;
       transition: color 0.3s, background-color 0.3s;
       user-select: none;
+      white-space: nowrap;
     }
     .nav-item:hover {
       color: #fff;
       background-color: rgba(45, 212, 191, 0.1);
     }
-    .nav-item .icon { font-size: 1.2rem; color: #2dd4bf; }
-    .logout-btn { margin-left: auto;}
-    .logout-btn .icon { color: #f87171; }
-    .logout-btn:hover { background-color: rgba(239,68,68,0.1); color:#f43f5e;}
+    .nav-item .icon {
+      font-size: 1.2rem;
+      color: #2dd4bf;
+    }
+    .logout-btn {
+      margin-left: auto;
+    }
+    .logout-btn .icon {
+      color: #f87171;
+    }
+    .logout-btn:hover {
+      background-color: rgba(239,68,68,0.1);
+      color:#f43f5e;
+    }
+
+    /* Hamburger Menu Button */
+    #nav-toggle-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.25rem;
+      width: 28px;
+      height: 24px;
+      position: relative;
+      flex-shrink: 0;
+    }
+    #nav-toggle-btn:focus {
+      outline: 2px solid #60a5fa;
+      outline-offset: 2px;
+    }
+    .hamburger,
+    .hamburger::before,
+    .hamburger::after {
+      display: block;
+      background-color: #60a5fa;
+      height: 3px;
+      width: 25px;
+      border-radius: 2px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    .hamburger::before,
+    .hamburger::after {
+      content: '';
+      position: absolute;
+    }
+    .hamburger::before {
+      top: -8px;
+      left: 0;
+    }
+    .hamburger::after {
+      top: 8px;
+      left: 0;
+    }
+
+    /* Responsive navbar styles */
+    @media (max-width: 768px) {
+      .nav-links {
+        position: absolute;
+        top: 60px;
+        right: 2rem;
+        background: rgba(12,19,34,0.95);
+        backdrop-filter: blur(25px);
+        border-radius: 12px;
+        flex-direction: column;
+        width: 220px;
+        display: none;
+        padding: 1rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        gap: 0;
+        z-index: 1050;
+      }
+      .nav-links.active {
+        display: flex;
+      }
+      .nav-item {
+        padding: 0.75rem 1rem;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        margin: 0.25rem 0;
+      }
+      .nav-item.logout-btn {
+        margin-left: 0;
+        width: 100%;
+        text-align: center;
+      }
+      #nav-toggle-btn {
+        display: block;
+      }
+    }
 
     /* Page header */
     header {
@@ -188,7 +278,6 @@
       .section-title { font-size: 1.6rem; }
       p { font-size: 0.95rem; }
     }
-
   </style>
 </head>
 <body>
@@ -199,7 +288,12 @@
   <div class="particle"></div>
 
   <!-- Dynamic role-based navbar -->
-  <nav id="navbar"></nav>
+  <nav id="navbar" role="navigation" aria-label="Primary Navigation">
+    <button id="nav-toggle-btn" class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links" type="button">
+      <span class="hamburger"></span>
+    </button>
+    <div class="nav-links" id="nav-links" tabindex="-1"></div>
+  </nav>
 
   <!-- Page header -->
   <header>About IntelliPatrol</header>
@@ -232,64 +326,96 @@
   </footer>
 
   <script>
-    // Dynamic NAVBAR script identical to user approval and home pages
-    const role = localStorage.getItem("role");
-    if (!role) window.location.href = "login.html";
+  // Get role from localStorage
+  const role = localStorage.getItem("role");
+  if (!role) window.location.href = "login.html";
 
-    const navbar = document.getElementById("navbar");
-    let links = `<a href="home.html" class="nav-item"><span class="icon">🏠</span><span>Home</span></a>`;
+  const navbar = document.getElementById("navbar");
+  const navLinksContainer = document.getElementById("nav-links");
+  const navToggleBtn = document.getElementById("nav-toggle-btn");
 
-    const navConfig = {
-      admin: [
-        { href: 'index.html', icon: '📥', text: 'Input' },
-        { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
-        { href: 'simulation.html', icon: '⚙️', text: 'Simulation' },
-        { href: 'analytics.html', icon: '📈', text: 'Analytics' },
-        { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
-        { href: 'admin.html', icon: '👤', text: 'My Profile' },
-        { href: 'admin_approval.html', icon: '✅', text: 'Approvals' },
-        { href: 'about.html', icon: 'ℹ️', text: 'About' },
-        { href: 'contact.html', icon: '📞', text: 'Contact Us' }
-      ],
-      user: [
-        { href: 'index.html', icon: '📥', text: 'Input' },
-        { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
-        { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
-        { href: 'user_profile.html', icon: '👤', text: 'My Profile' },
-        { href: 'about.html', icon: 'ℹ️', text: 'About' },
-        { href: 'contact.html', icon: '📞', text: 'Contact Us' }
-      ],
-      customer: [
-        { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
-        { href: 'simulation.html', icon: '⚙️', text: 'Simulation' },
-        { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
-        { href: 'customer_profile.html', icon: '👤', text: 'My Profile' },
-        { href: 'about.html', icon: 'ℹ️', text: 'About' },
-        { href: 'contact.html', icon: '📞', text: 'Contact Us' }
-      ],
-      stakeholder: [
-        { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
-        { href: 'analytics.html', icon: '📈', text: 'Analytics' },
-        { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
-        { href: 'stakeholder_profile.html', icon: '👤', text: 'My Profile' },
-        { href: 'about.html', icon: 'ℹ️', text: 'About' },
-        { href: 'contact.html', icon: '📞', text: 'Contact Us' }
-      ]
-    };
+  // Nav config with icons (emojis) as requested
+  const navConfig = {
+    admin: [
+      { href: 'index.html', icon: '📥', text: 'Input' },
+      { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+      { href: 'simulation.html', icon: '⚙️', text: 'Simulation' },
+      { href: 'analytics.html', icon: '📈', text: 'Analytics' },
+      { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
+      { href: 'admin.html', icon: '👤', text: 'My Profile' },
+      { href: 'admin_approval.html', icon: '✅', text: 'Approvals' },
+      { href: 'about.html', icon: 'ℹ️', text: 'About' },
+      { href: 'contact.html', icon: '📞', text: 'Contact Us' }
+    ],
+    user: [
+      { href: 'index.html', icon: '📥', text: 'Input' },
+      { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+      { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
+      { href: 'user_profile.html', icon: '👤', text: 'My Profile' },
+      { href: 'about.html', icon: 'ℹ️', text: 'About' },
+      { href: 'contact.html', icon: '📞', text: 'Contact Us' }
+    ],
+    customer: [
+      { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+      { href: 'simulation.html', icon: '⚙️', text: 'Simulation' },
+      { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
+      { href: 'customer_profile.html', icon: '👤', text: 'My Profile' },
+      { href: 'about.html', icon: 'ℹ️', text: 'About' },
+      { href: 'contact.html', icon: '📞', text: 'Contact Us' }
+    ],
+    stakeholder: [
+      { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+      { href: 'analytics.html', icon: '📈', text: 'Analytics' },
+      { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
+      { href: 'stakeholder_profile.html', icon: '👤', text: 'My Profile' },
+      { href: 'about.html', icon: 'ℹ️', text: 'About' },
+      { href: 'contact.html', icon: '📞', text: 'Contact Us' }
+    ]
+  };
 
-    if (navConfig[role]) {
-      navConfig[role].forEach(link => {
-        links += `<a href="${link.href}" class="nav-item"><span class="icon">${link.icon}</span><span>${link.text}</span></a>`;
-      });
+  // Build nav links HTML with icons
+  let linksHTML = `<a href="home.html" class="nav-item"><span class="icon">🏠</span><span>Home</span></a>`;
+  if (navConfig[role]) {
+    navConfig[role].forEach(link => {
+      linksHTML += `<a href="${link.href}" class="nav-item"><span class="icon">${link.icon}</span><span>${link.text}</span></a>`;
+    });
+  }
+  linksHTML += `<a href="#" onclick="logout()" class="nav-item logout-btn"><span class="icon">🚪</span><span>Logout</span></a>`;
+
+  navLinksContainer.innerHTML = linksHTML;
+
+  // Hamburger toggle functionality
+  navToggleBtn.addEventListener('click', () => {
+    const expanded = navToggleBtn.getAttribute('aria-expanded') === 'true';
+    navToggleBtn.setAttribute('aria-expanded', String(!expanded));
+    navLinksContainer.classList.toggle('active');
+    if (navLinksContainer.classList.contains('active')) {
+      navLinksContainer.focus();
     }
+  });
 
-    links += `<a href="#" onclick="logout()" class="nav-item logout-btn"><span class="icon">🚪</span><span>Logout</span></a>`;
-    navbar.innerHTML = links;
+  // Close menu when nav link clicked (mobile usability)
+  navLinksContainer.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinksContainer.classList.remove('active');
+      navToggleBtn.setAttribute('aria-expanded', 'false');
+      navToggleBtn.focus();
+    });
+  });
 
-    function logout() {
-      localStorage.clear();
-      window.location.href = "login.html";
+  // Close menu on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navLinksContainer.classList.contains('active')) {
+      navLinksContainer.classList.remove('active');
+      navToggleBtn.setAttribute('aria-expanded', 'false');
+      navToggleBtn.focus();
     }
+  });
+
+  function logout() {
+    localStorage.clear();
+    window.location.href = "login.html";
+  }
   </script>
 </body>
 </html>
