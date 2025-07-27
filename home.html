@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IntelliPatrol - Home</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+
+        /* --- KEYFRAME ANIMATIONS --- */
+        @keyframes background-pan {
+            0% { transform: scale(1.05) translate(0, 0); }
+            50% { transform: scale(1.15) translate(1%, -1%); }
+            100% { transform: scale(1.05) translate(0, 0); }
+        }
+        @keyframes text-shimmer {
+            0% { background-position: -100% 0; }
+            100% { background-position: 100% 0; }
+        }
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* RGB Border Animation Property & Keyframes */
+        @property --angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+        @keyframes rgb-border-spin {
+            to {
+                --angle: 360deg;
+            }
+        }
+
+        /* --- BASE & BODY STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #0c1322; /* Dark fallback color */
+            color: #e2e8f0;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+
+        /* --- MULTI-LAYERED BACKGROUND --- */
+        .background-container {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            /* Using a placeholder image from Unsplash. Replace with your 'IntelliPatrolBackground.png' if available. */
+            background-image: url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            filter: blur(3px) grayscale(60%) brightness(0.6);
+            animation: background-pan 45s ease-in-out infinite;
+        }
+        .page-container {
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(180deg, rgba(12, 19, 34, 0.9) 0%, rgba(12, 19, 34, 0.95) 100%); /* Slightly adjusted gradient */
+            min-height: 100vh; /* Ensure full viewport height */
+            display: flex; /* Make it a flex container */
+            flex-direction: column; /* Stack children vertically */
+        }
+
+        /* --- NAVIGATION BAR --- */
+        #navbar {
+            background: rgba(12, 19, 34, 0.6);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            height: 70px;
+        }
+        .nav-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+        .nav-item:hover {
+            color: #fff;
+            background-color: rgba(45, 212, 191, 0.1);
+        }
+        .nav-item .icon {
+            font-size: 1.2rem;
+            color: #2dd4bf;
+        }
+        .logout-btn {
+            margin-left: auto;
+        }
+        .logout-btn .icon {
+            color: #f87171;
+        }
+        .logout-btn:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        /* --- WELCOME HERO SECTION --- */
+        .welcome-hero {
+            padding: 8rem 2rem 6rem; /* More vertical padding */
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            /* RGB Border for Hero Section */
+            border-width: 2px;
+            border-style: solid;
+            border-image-slice: 1;
+            border-image-source: conic-gradient(from var(--angle), #ff00c8, #7a00ff, #002bff, #00ffd5, #48ff00, #fffb00, #ff7300, #ff0000, #ff00c8);
+            animation: rgb-border-spin 8s linear infinite; /* Slower spin for hero */
+        }
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            animation: slideInUp 1s ease-out forwards;
+        }
+        .hero-content h1 {
+            font-size: 3.8rem; /* Larger font */
+            font-weight: 900;
+            margin-bottom: 0.75rem;
+            color: #fff;
+            position: relative;
+            background: linear-gradient(90deg, #2dd4bf, #3b82f6, #8b5cf6); /* Gradient text */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: text-shimmer 5s infinite linear;
+        }
+        .hero-content h1::before { /* Animated light trail behind text */
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle 80px at var(--x, 50%) var(--y, 50%), rgba(45, 212, 191, 0.15), transparent 70%);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            animation: light-trail 10s infinite alternate;
+            opacity: 0.7;
+            z-index: -1;
+        }
+        @keyframes light-trail {
+            0% { transform: translateX(-50%) translateY(-50%) scale(0.8); }
+            100% { transform: translateX(50%) translateY(-50%) scale(1.2); }
+        }
+
+        .hero-content #role-display {
+            font-size: 1.25rem; /* Larger font */
+            color: #94a3b8;
+            margin-bottom: 3rem;
+        }
+        .hero-content #role-display strong {
+            text-transform: capitalize;
+            font-weight: 700;
+            color: #3b82f6; /* Blue accent for role */
+        }
+        .cta-button {
+            background: linear-gradient(135deg, #2dd4bf 0%, #3b82f6 100%);
+            color: white;
+            text-shadow: none;
+            border: none;
+            padding: 1.2rem 3rem; /* Larger button */
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700; /* Bolder font */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 10px 30px rgba(45, 212, 191, 0.3);
+            display: inline-block; /* Allows padding and margin */
+        }
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(45, 212, 191, 0.4);
+        }
+
+        /* --- INFO SECTIONS & FEATURE CARDS --- */
+        .info-section {
+            padding: 5rem 2rem; /* More padding */
+        }
+        .section-title {
+            font-size: 2.8rem; /* Larger title */
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3.5rem; /* More space */
+            color: #fff;
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5, #00d2ff); /* Gradient title */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 100%;
+            animation: text-shimmer 7s infinite linear;
+        }
+        .info-section .section-title,
+        .feature-card,
+        .info-content-detailed {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .info-section.is-visible .section-title,
+        .info-section.is-visible .feature-card,
+        .info-section.is-visible .info-content-detailed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .info-content {
+            max-width: 900px;
+            margin: 0 auto 3.5rem auto; /* More margin */
+            text-align: center;
+            font-size: 1.15rem; /* Slightly larger font */
+            line-height: 1.8;
+            color: #cbd5e1; /* Lighter grey for better readability */
+            animation: slideInUp 1.2s ease-out forwards;
+            animation-delay: 0.2s;
+        }
+
+        /* New detailed info content style */
+        .info-content-detailed {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            justify-content: center;
+            gap: 2.5rem;
+            padding-bottom: 2rem;
+            animation-delay: 0.3s;
+        }
+        .info-content-detailed > div {
+            flex: 1;
+            min-width: 300px; /* Minimum width for each column */
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            text-align: left;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .info-content-detailed > div:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        .info-content-detailed h3 {
+            font-size: 1.5rem;
+            color: #2dd4bf; /* Teal accent */
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .info-content-detailed p {
+            color: #94a3b8;
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Slightly wider cards */
+            gap: 2rem; /* More space between cards */
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 1rem; /* Space from title */
+        }
+        .feature-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2.5rem; /* More padding */
+            backdrop-filter: blur(10px);
+            transition-property: transform, box-shadow, border-color;
+            transition-duration: 0.3s;
+            transition-timing-function: ease;
+            position: relative; /* For the RGB effect */
+            overflow: hidden; /* Hide overflow of the pseudo-element */
+        }
+        /* Staggered animation delay for cards */
+        .info-section.is-visible .feature-card:nth-child(1) { transition-delay: 0.1s; }
+        .info-section.is-visible .feature-card:nth-child(2) { transition-delay: 0.2s; }
+        .info-section.is-visible .feature-card:nth-child(3) { transition-delay: 0.3s; }
+        .info-section.is-visible .feature-card:nth-child(4) { transition-delay: 0.4s; }
+        .info-section.is-visible .feature-card:nth-child(5) { transition-delay: 0.5s; }
+        .info-section.is-visible .feature-card:nth-child(6) { transition-delay: 0.6s; }
+
+        .feature-card::before { /* RGB border effect on hover */
+            content: '';
+            position: absolute;
+            inset: -3px; /* Slightly expand to cover the original border */
+            border-radius: 18px; /* Match card border-radius + expansion */
+            padding: 2px; /* Controls the thickness of the gradient border */
+            background: conic-gradient(from var(--angle, 0deg), #ff00c8, #7a00ff, #002bff, #00ffd5, #48ff00, #fffb00, #ff7300, #ff0000, #ff00c8);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            z-index: -1;
+            opacity: 0; /* Hidden by default */
+            transition: opacity 0.3s ease;
+        }
+        .feature-card:hover::before {
+            opacity: 1;
+            animation: rgb-border-spin 3s linear infinite; /* Faster spin on hover */
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 0 50px rgba(45, 212, 191, 0.2);
+            border-color: transparent; /* Hide original border on hover */
+        }
+        .feature-card h3 {
+            font-size: 1.35rem; /* Slightly larger title in card */
+            margin-bottom: 0.75rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .feature-card h3 .icon {
+            font-size: 1.8rem;
+            color: #3b82f6; /* Blue icon */
+        }
+        .feature-card p {
+            color: #94a3b8;
+            line-height: 1.7;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: transparent;
+            color: #64748b;
+            text-align: center;
+            padding: 2rem;
+            margin-top: auto; /* Pushes footer to the bottom */
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 768px) {
+            #navbar {
+                height: auto;
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 1rem;
+            }
+            .nav-item {
+                padding: 0.6rem 0.8rem;
+                margin: 0.2rem;
+            }
+            .logout-btn {
+                margin-left: unset; /* Remove auto margin on smaller screens */
+                width: 100%;
+                text-align: center;
+                margin-top: 0.5rem;
+            }
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            .hero-content #role-display {
+                font-size: 1rem;
+            }
+            .cta-button {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
+            .info-section {
+                padding: 3rem 1rem;
+            }
+            .section-title {
+                font-size: 2rem;
+                margin-bottom: 2.5rem;
+            }
+            .info-content, .info-content-detailed p {
+                font-size: 1rem;
+            }
+            .features-grid {
+                grid-template-columns: 1fr; /* Single column on small screens */
+            }
+            .feature-card {
+                padding: 1.5rem;
+            }
+            .info-content-detailed > div {
+                min-width: unset;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="background-container"></div>
+<div class="page-container">
+    <nav id="navbar"></nav>
+
+    <main>
+        <section class="welcome-hero">
+            <div class="hero-content">
+                <h1 id="welcome-message">Welcome</h1>
+                <p id="role-display">Loading your profile...</p>
+                <a href="dashboard.html" class="cta-button">Go To Dashboard</a>
+            </div>
+        </section>
+
+        <section class="info-section" id="about-section">
+            <h2 class="section-title">What is IntelliPatrol?</h2>
+            <p class="info-content">
+                IntelliPatrol is a cutting-edge smart warehouse robot developed as a key initiative of TCS Digital Engineering. It redefines facility monitoring by autonomously patrolling your environment, capturing critical data points, and ensuring peak operational safety and efficiency.
+            </p>
+            <div class="info-content-detailed">
+                <div>
+                    <h3><span class="icon">🤖</span> Autonomous Navigation</h3>
+                    <p>Our robots are equipped with advanced SLAM technology and obstacle avoidance, enabling seamless navigation through complex warehouse layouts without human intervention.</p>
+                </div>
+                <div>
+                    <h3><span class="icon">📊</span> Data-Driven Insights</h3>
+                    <p>Beyond simple monitoring, IntelliPatrol collects vast amounts of environmental data, which is then transformed into actionable insights via powerful analytics tools.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="info-section" id="features-section">
+            <h2 class="section-title">Core Features at Your Fingertips</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3><span class="icon">⚡</span> Real-time Monitoring</h3>
+                    <p>Instantaneous updates and comprehensive sensor readings displayed on a dynamic live dashboard for swift, informed decision-making.</p>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="icon">🔔</span> Smart Alerts & Notifications</h3>
+                    <p>Receive intelligent suggestions and critical alerts when environmental thresholds are breached, ensuring immediate response to potential hazards.</p>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="icon">🔒</span> Secure Data Storage</h3>
+                    <p>All sensor data is meticulously and securely stored in AWS DynamoDB, complete with a full, immutable audit trail for regulatory compliance and historical analysis.</p>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="icon">📈</span> Actionable Analytics</h3>
+                    <p>Leverage intuitive dashboards to analyze historical trends, visualize data through graphical reports, and proactively enhance warehouse safety protocols.</p>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="icon">🌍</span> Live Robot Mapping</h3>
+                    <p>Track your IntelliPatrol robots in real-time on an interactive map, visualizing their routes, current locations, and sensor coverage areas.</p>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="icon">🔬</span> Simulation Environment</h3>
+                    <p>Test and optimize robot routes and sensor configurations in a safe, virtual simulation environment before deploying changes to your physical robots.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="info-section" id="technology-section">
+            <h2 class="section-title">Robust Technology Stack</h2>
+            <div class="info-content-detailed">
+                <div>
+                    <h3><span class="icon">☁️</span> Cloud Infrastructure</h3>
+                    <p>Powered by Amazon Web Services (AWS) for scalable, reliable, and secure cloud operations, ensuring high availability and performance.</p>
+                </div>
+                <div>
+                    <h3><span class="icon">🚀</span> Serverless Computing</h3>
+                    <p>Utilizes AWS Lambda for efficient, event-driven processing of sensor data, minimizing operational overhead and maximizing responsiveness.</p>
+                </div>
+                <div>
+                    <h3><span class="icon">🗄️</span> Database Management</h3>
+                    <p>Data persistence and retrieval are handled by AWS DynamoDB, a fully managed NoSQL database service designed for high-performance applications.</p>
+                </div>
+                <div>
+                    <h3><span class="icon">🌐</span> Frontend Framework</h3>
+                    <p>Built with modern web standards, leveraging HTML, CSS, and JavaScript to deliver a responsive, intuitive, and engaging user experience across all devices.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        &copy; 2025 IntelliPatrol - A  Digital Engineering Initiative
+    </footer>
+</div>
+
+<script>
+    // --- USER AUTHENTICATION & PERSONALIZATION ---
+    const role = localStorage.getItem("role");
+    const userName = localStorage.getItem("user_id"); // Assuming 'user_id' stores the user's name
+
+    if (!role) {
+        window.location.href = "login.html"; // Redirect if no role found
+    } else {
+        // Personalize Welcome Message (only name)
+        document.getElementById('welcome-message').textContent = `Welcome, ${userName || 'User'}!`;
+        document.getElementById('role-display').innerHTML = `Your access level: <strong>${role}</strong>`;
+    }
+
+    // --- DYNAMIC NAVIGATION BAR ---
+    const navbar = document.getElementById("navbar");
+    let links = `<a href="home.html" class="nav-item"><span class="icon">🏠</span><span>Home</span></a>`;
+
+    const navConfig = {
+        admin: [
+            { href: 'index.html', icon: '📥', text: 'Input' },
+            { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+            { href: 'simulation.html', icon: '⚙️', text: 'Simulation' },
+            { href: 'analytics.html', icon: '📈', text: 'Analytics' },
+            { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
+             { href: 'admin_approval.html', icon: '✅', text: 'Approvals' },
+              { href: 'about.html', icon: 'ℹ️', text: 'About' },
+            { href: 'contact.html', icon: '📞', text: 'Contact Us' },
+            { href: 'admin.html', icon: '👤', text: 'My Profile' }
+            // Admin-specific link
+        ],
+        user: [
+            { href: 'index.html', icon: '📥', text: 'Input' },
+            { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+            { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
+             { href: 'about.html', icon: 'ℹ️', text: 'About' },
+            { href: 'contact.html', icon: '📞', text: 'Contact Us' },
+              { href: 'user_profile.html', icon: '👤', text: 'My Profile' }
+        ],
+        customer: [
+            { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+            { href: 'simulation.html', icon: '⚙️', text: 'Simulation' },
+            { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
+             { href: 'about.html', icon: 'ℹ️', text: 'About' },
+            { href: 'contact.html', icon: '📞', text: 'Contact Us' },
+            { href: 'customer_profile.html', icon: '👤', text: 'My Profile' },
+        ],
+        stakeholder: [
+            { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+            { href: 'analytics.html', icon: '📈', text: 'Analytics' },
+            { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
+             { href: 'about.html', icon: 'ℹ️', text: 'About' },
+            { href: 'contact.html', icon: '📞', text: 'Contact Us' },
+            { href: 'stakeholder_profile.html', icon: '👤', text: 'My Profile' }
+        ]
+    };
+    
+    if (navConfig[role]) {
+        navConfig[role].forEach(link => {
+            links += `<a href="${link.href}" class="nav-item"><span class="icon">${link.icon}</span><span>${link.text}</span></a>`;
+        });
+    }
+
+    links += `<a href="#" onclick="logout()" class="nav-item logout-btn"><span class="icon">🚪</span><span>Logout</span></a>`;
+    navbar.innerHTML = links;
+
+    function logout() {
+        localStorage.clear(); // Clears all stored items
+        window.location.href = "login.html"; // Redirect to login page
+    }
+
+    // --- SCROLL-TRIGGERED ANIMATIONS ---
+    const animatedSections = document.querySelectorAll('.info-section');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target); // Stop observing once visible
+            }
+        });
+    }, { threshold: 0.1 }); // Trigger when 10% of the section is visible
+
+    animatedSections.forEach(section => {
+        observer.observe(section);
+    });
+</script>
+
+</body>
+</html>

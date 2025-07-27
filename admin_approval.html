@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IntelliPatrol - Admin User Approval</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Orbitron:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    /* Keyframe Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes subtlePulse {
+      0%, 100% { opacity: 0.25; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(1.02); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes toastShow {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Base styles */
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      color: #e2e8f0;
+      background: url('simulation.png') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Animated background overlays (subtle) */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 118, 117, 0.22) 0%, transparent 45%);
+      animation: subtlePulse 10s ease-in-out infinite alternate;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Floating particles */
+    .particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: float 8s ease-in-out infinite;
+      z-index: 1;
+    }
+    .particle:nth-child(1) { width: 12px; height: 12px; top: 22%; left: 13%; animation-delay: 0s; }
+    .particle:nth-child(2) { width: 16px; height: 16px; top: 65%; left: 78%; animation-delay: 2.5s; }
+    .particle:nth-child(3) { width: 10px; height: 10px; top: 82%; left: 19%; animation-delay: 4.2s; }
+    .particle:nth-child(4) { width: 14px; height: 14px; top: 39%; left: 68%; animation-delay: 1.6s; }
+
+    /* Dynamic Navbar */
+    #navbar {
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(20px);
+      padding: 1.1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 10000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      animation: slideInLeft 0.9s ease forwards;
+      font-weight: 600;
+      font-size: 1.1rem;
+      font-family: 'Inter', sans-serif;
+    }
+    #navbar a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.7rem 1rem;
+      color: #60a5fa;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    #navbar a:hover {
+      background-color: rgba(96, 165, 250, 0.15);
+      color: #a855f7;
+      transform: translateY(-1.8px);
+    }
+    #navbar a .icon {
+      font-size: 1.2rem;
+    }
+    #navbar a.logout-btn {
+      margin-left: auto;
+      color: #f87171;
+    }
+    #navbar a.logout-btn:hover {
+      background-color: rgba(239, 68, 68, 0.15);
+      color: #f43f5e;
+    }
+
+    /* Header (used if needed) */
+    header {
+      padding: 1.5rem;
+      font-weight: 700;
+      font-size: 1.8rem;
+      text-align: center;
+      color: white;
+      text-shadow: 0 0 5px rgba(0,0,0,0.5);
+      user-select: none;
+      z-index: 10;
+      position: relative;
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    /* Main container */
+    .container {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      max-width: 1100px;
+      margin: 2.5rem auto 3rem;
+      padding: 2.5rem 2rem 2rem;
+      border-radius: 24px;
+      box-shadow: 0 25px 55px rgba(0,0,0,0.22), inset 0 0 0 1px rgba(255,255,255,0.12);
+      animation: fadeInUp 1.2s ease forwards;
+      color: #f0f0f0;
+      position: relative;
+      z-index: 10;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .container h2 {
+      font-family: 'Orbitron', monospace;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1.7rem;
+      color: #a855f7;
+      text-align: center;
+      text-shadow: 0 0 10px #a855f7aa;
+      user-select: none;
+      animation: fadeInUp 1.5s ease forwards;
+    }
+
+    .container h3 {
+      text-align: center;
+      font-weight: 600;
+      margin-top: 1.1rem;
+      margin-bottom: 1rem;
+      color: #facc15;
+      user-select: none;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .filter-container {
+      display: flex;
+      justify-content: center;
+      gap: 1.3rem;
+      margin-bottom: 1.8rem;
+      flex-wrap: wrap;
+      animation: fadeInUp 1.3s ease forwards;
+    }
+
+    .filter-container select {
+      padding: 10px 18px;
+      border: 2px solid #a855f7;
+      border-radius: 16px;
+      font-size: 1rem;
+      font-weight: 600;
+      background: rgba(255 255 255 / 0.25);
+      color: #f0e9f5;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      user-select: none;
+    }
+    .filter-container select:hover, .filter-container select:focus {
+      background: rgba(255 255 255 / 0.45);
+      border-color: #d8b4fe;
+      outline: none;
+      color: #4c1d95;
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      animation: fadeInUp 1.4s ease forwards;
+    }
+
+    thead tr {
+      background: rgba(168, 85, 247, 0.8);
+      font-family: 'Orbitron', monospace;
+      color: #f3f4f6;
+      user-select: none;
+    }
+
+    th, td {
+      padding: 0.95rem 1.2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      text-align: center;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #e0e6f3;
+    }
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+    tbody tr:hover {
+      background: rgba(168, 85, 247, 0.16);
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    /* Role badges */
+    .role-badge {
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: white;
+      text-transform: capitalize;
+      user-select: none;
+      display: inline-block;
+      letter-spacing: 0.04em;
+      box-shadow: 0 0 8px #a855f7bb;
+      background: linear-gradient(135deg, #a855f7, #6b21a8);
+    }
+    .role-admin { background: #4338ca; }
+    .role-user { background: #22c55e; }
+    .role-customer { background: #facc15; color: black; }
+    .role-stakeholder { background: #38bdf8; color: black; }
+
+    /* Status badges */
+    .status-badge {
+      display: inline-block;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: capitalize;
+      user-select: none;
+      animation: fadeInUp 0.6s ease both;
+      letter-spacing: 0.06em;
+    }
+    .status-approved {
+      background-color: #dcfce7;
+      color: #15803d;
+      box-shadow: 0 0 8px #22c55ebb;
+    }
+    .status-rejected {
+      background-color: #fee2e2;
+      color: #b91c1c;
+      box-shadow: 0 0 8px #ef4444bb;
+    }
+    .status-pending {
+      background-color: #fef9c3;
+      color: #92400e;
+      box-shadow: 0 0 8px #f59e0bbb;
+    }
+
+    /* Action Buttons */
+    button {
+      padding: 8px 18px;
+      margin: 0 4px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      color: white;
+      user-select: none;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+      min-width: 84px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    button:hover {
+      transform: scale(1.08);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+    }
+    button:active {
+      transform: scale(1);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.20);
+    }
+    .approve-btn { background: #22c55e; }
+    .reject-btn { background: #f43f5e; }
+    .delete-btn { background: #7c3aed; }
+
+    /* Footer */
+    footer {
+      background: rgba(15, 23, 42, 0.9);
+      color: #94a3b8;
+      text-align: center;
+      padding: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      margin-top: auto;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      user-select: none;
+      box-shadow: inset 0 1px 5px rgba(255,255,255,0.1);
+    }
+
+    /* Toast notifications */
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #1e3a8a;
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: 10px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      z-index: 9999;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      user-select: none;
+    }
+    .toast.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+      animation: toastShow 0.3s ease forwards;
+    }
+    .toast.success {
+      background-color: #22c55e;
+      box-shadow: 0 0 16px #16a34a88;
+    }
+    .toast.error {
+      background-color: #ef4444;
+      box-shadow: 0 0 16px #dc262688;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .container {
+        margin: 1rem 1rem 2rem;
+        padding: 1.8rem 1.5rem 1.2rem;
+      }
+      table {
+        font-size: 0.9rem;
+      }
+      button {
+        padding: 6px 14px;
+        font-size: 0.9rem;
+        min-width: 68px;
+      }
+      .filter-container {
+        gap: 1rem;
+        justify-content: center;
+      }
+      .filter-container select {
+        min-width: 120px;
+      }
+    }
+    @media (max-width: 480px) {
+      .container {
+        margin: 1rem 0.75rem 1.5rem;
+        padding: 1.2rem 1rem 1rem;
+      }
+      table {
+        font-size: 0.85rem;
+      }
+      button {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+        min-width: 60px;
+      }
+      .filter-container {
+        flex-direction: column;
+        gap: 0.8rem;
+        align-items: center;
+      }
+      .filter-container select {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Floating particles -->
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+
+  <!-- Dynamic Role-Based Navbar -->
+  <nav id="navbar"></nav>
+
+  <!-- Optional header -->
+  <header>IntelliPatrol - User Approval Panel</header>
+
+  <div class="container">
+    <h2>User Approvals</h2>
+
+    <h3>🔎 Filter Users by Role & Status</h3>
+    <div class="filter-container">
+      <select id="roleFilter" onchange="filterTable()">
+        <option value="all">All Roles</option>
+        <option value="admin">Admin</option>
+        <option value="user">User</option>
+        <option value="customer">Customer</option>
+        <option value="stakeholder">Stakeholder</option>
+      </select>
+
+      <select id="statusFilter" onchange="filterTable()">
+        <option value="all">All Status</option>
+        <option value="approved">Approved</option>
+        <option value="pending">Pending</option>
+        <option value="rejected">Rejected</option>
+      </select>
+    </div>
+
+    <table id="userTable" aria-label="User approvals table">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <footer>
+    &copy; 2025 IntelliPatrol - Admin Dashboard A Digital Engineering Initiative
+  </footer>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast"></div>
+
+  <script>
+    // NAVBAR
+    const role = localStorage.getItem("role");
+    const userName = localStorage.getItem("user_id");
+    if (!role || role !== "admin") {
+      window.location.href = "login.html";
+    }
+
+    const navbar = document.getElementById("navbar");
+    let links = `<a href="home.html" class="nav-item"><span class="icon">🏠</span><span>Home</span></a>`;
+    const navConfig = {
+      admin: [
+        { href: 'index.html', icon: '📥', text: 'Input' },
+            { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+            { href: 'simulation.html', icon: '⚙️', text: 'Simulation' },
+            { href: 'analytics.html', icon: '📈', text: 'Analytics' },
+            { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
+             { href: 'admin_approval.html', icon: '✅', text: 'Approvals' },
+              { href: 'about.html', icon: 'ℹ️', text: 'About' },
+            { href: 'contact.html', icon: '📞', text: 'Contact Us' },
+            { href: 'admin.html', icon: '👤', text: 'My Profile' }
+      ],
+      // Other roles could be added if needed
+    };
+    if (navConfig[role]) {
+      navConfig[role].forEach(link => {
+        links += `<a href="${link.href}" class="nav-item"><span class="icon">${link.icon}</span><span>${link.text}</span></a>`;
+      });
+    }
+    links += `<a href="#" onclick="logout()" class="nav-item logout-btn"><span class="icon">🚪</span><span>Logout</span></a>`;
+    navbar.innerHTML = links;
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    // API Endpoints
+    const listUrl = "https://txlzg7wb7trwqymtaqluoe2ezq0epors.lambda-url.us-east-1.on.aws/";
+    const updateUrl = "https://v4xc67auwlqz5pwdwodza7v74y0pplgb.lambda-url.us-east-1.on.aws/";
+
+    let allUsers = [];
+
+    // Load users from backend
+    async function loadUsers() {
+      try {
+        const res = await fetch(listUrl, { method: "GET" });
+        const data = await res.json();
+        allUsers = data.users;
+        filterTable();
+      } catch (err) {
+        showToast("Error loading users", "error");
+        console.error(err);
+      }
+    }
+
+    // Filter and render the users in table
+    function filterTable() {
+      const tbody = document.querySelector("#userTable tbody");
+      tbody.innerHTML = "";
+      const selectedRole = document.getElementById("roleFilter").value;
+      const selectedStatus = document.getElementById("statusFilter").value;
+
+      const filteredUsers = allUsers.filter(user => {
+        const roleMatch = selectedRole === "all" || user.role === selectedRole;
+        const statusMatch = selectedStatus === "all" || user.status === selectedStatus;
+        return roleMatch && statusMatch;
+      });
+
+      filteredUsers.forEach(user => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${user.user_id}</td>
+          <td><span class="role-badge role-${user.role.toLowerCase()}">${user.role}</span></td>
+          <td><span class="status-badge status-${user.status.toLowerCase()}">${user.status}</span></td>
+          <td>
+            <button class="approve-btn" onclick="updateStatus('${user.user_id}', 'approved')">Approve</button>
+            <button class="reject-btn" onclick="updateStatus('${user.user_id}', 'rejected')">Reject</button>
+            <button class="delete-btn" onclick="updateStatus('${user.user_id}', 'delete')">Delete</button>
+          </td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Update user status
+    async function updateStatus(user_id, action) {
+      try {
+        const res = await fetch(updateUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id, action })
+        });
+        const result = await res.json();
+        if (res.ok) {
+          showToast(result.message || "Update successful!", "success");
+          loadUsers();
+        } else {
+          showToast(result.message || "Update failed", "error");
+        }
+      } catch (err) {
+        console.error(err);
+        showToast("Update failed", "error");
+      }
+    }
+
+    // Show toast notification
+    function showToast(message, type = "success") {
+      const toast = document.getElementById("toast");
+      toast.className = `toast show ${type}`;
+      toast.textContent = message;
+      setTimeout(() => { toast.className = "toast"; }, 3500);
+    }
+
+    // Init default filter values
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("roleFilter").value = "all";
+      document.getElementById("statusFilter").value = "pending";
+      loadUsers();
+    });
+  </script>
+</body>
+</html>

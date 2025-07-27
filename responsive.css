@@ -1,0 +1,61 @@
+/* responsive.css – IntelliPatrol Mobile Responsive Design */
+
+@media screen and (max-width: 768px) {
+    body {
+      font-size: 16px;
+      padding: 0;
+    }
+  
+    header h1, .hero h1 {
+      font-size: 1.8rem;
+    }
+  
+    .hero p, header p {
+      font-size: 1rem;
+      padding: 0 1rem;
+    }
+  
+    .hero button, .get-started a {
+      width: 90%;
+      padding: 0.9rem 1.5rem;
+      font-size: 1rem;
+    }
+  
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 0.5rem;
+    }
+  
+    nav a {
+      margin: 0.3rem 0.5rem;
+      display: block;
+      font-size: 0.9rem;
+    }
+  
+    .features-grid,
+    .pricing-grid,
+    .robots-grid,
+    .cards-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .feature, .pricing-box, .robot-card {
+      width: 90%;
+      margin-bottom: 1rem;
+    }
+  
+    .table-container table,
+    .chart-container,
+    .analytics-box {
+      width: 100%;
+      overflow-x: auto;
+    }
+  
+    footer {
+      font-size: 0.85rem;
+      padding: 1rem 0.5rem;
+    }
+  }

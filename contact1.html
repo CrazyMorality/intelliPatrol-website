@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>IntelliPatrol - Contact Us</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Orbitron:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* --- Keyframe Animations (Copied from index.html for consistency) --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes subtlePulse {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.02); }
+        }
+        /* No specific RGB border spin or shimmer here unless explicitly requested for a contact form element */
+
+        /* --- Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            color: #e2e8f0;
+        }
+
+        /* Animated background elements */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(100, 116, 139, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(148, 163, 184, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(71, 85, 105, 0.1) 0%, transparent 60%);
+            animation: subtlePulse 8s ease-in-out infinite alternate;
+            z-index: 1;
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 8s ease-in-out infinite;
+            z-index: 2;
+        }
+        .particle:nth-child(1) { width: 8px; height: 8px; top: 15%; left: 5%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 12px; height: 12px; top: 70%; left: 90%; animation-delay: 2s; }
+        .particle:nth-child(3) { width: 6px; height: 6px; top: 85%; left: 15%; animation-delay: 4s; }
+        .particle:nth-child(4) { width: 10px; height: 10px; top: 30%; left: 75%; animation-delay: 1s; }
+        .particle:nth-child(5) { width: 7px; height: 7px; top: 50%; left: 25%; animation-delay: 3s; }
+        .particle:nth-child(6) { width: 9px; height: 9px; top: 10%; left: 60%; animation-delay: 5s; }
+
+        /* --- Navigation Bar (Identical to updated index.html) --- */
+        nav {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 1.2rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            animation: slideInLeft 0.8s ease-out forwards;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav .nav-left {
+            display: flex;
+            align-items: center;
+        }
+        nav .nav-left a {
+            color: #60a5fa;
+            font-size: 1.25rem;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        nav .nav-left a:hover {
+            color: #93c5fd;
+            transform: translateX(5px);
+        }
+        nav .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        nav .nav-right a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+        nav .nav-right a:hover {
+            color: #60a5fa;
+            transform: translateY(-2px);
+        }
+        nav .nav-right .login-link {
+            padding: 0.6rem 1.2rem;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 8px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+        }
+        nav .nav-right .login-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(90deg, #764ba2, #667eea);
+        }
+
+        /* --- Main Content Section --- */
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .contact-container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 3.5rem;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.05);
+            animation: fadeInUp 1s ease-out 0.4s both;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping for responsiveness */
+            gap: 2rem; /* Space between columns */
+            color: #e2e8f0;
+        }
+
+        .contact-info, .contact-form {
+            flex: 1; /* Allow columns to grow and shrink */
+            min-width: 300px; /* Minimum width before wrapping */
+        }
+
+        .contact-info h2, .contact-form h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .contact-info p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            color: #cbd5e1;
+        }
+
+        .contact-detail {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-detail .icon {
+            font-size: 1.8rem;
+            color: #60a5fa;
+            flex-shrink: 0; /* Prevent icon from shrinking */
+        }
+
+        .contact-detail span {
+            font-size: 1.05rem;
+            color: #e2e8f0;
+        }
+
+        .contact-form form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 0; /* Handled by gap in form */
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: #cbd5e1;
+            margin-bottom: 0.6rem;
+            font-size: 0.95rem;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            resize: vertical; /* Allow vertical resizing for textarea */
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .submit-btn {
+            padding: 1.1rem;
+            background: linear-gradient(135deg, #60a5fa 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(96, 165, 250, 0.3);
+            position: relative; /* For the subtle hover effect */
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(96, 165, 250, 0.4);
+            background: linear-gradient(135deg, #8b5cf6 0%, #60a5fa 100%);
+        }
+
+        .submit-btn::before { /* Subtle shimmer effect on hover */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        /* --- Footer (Identical to index.html) --- */
+        footer {
+            background: rgba(15, 23, 42, 0.9);
+            color: #94a3b8;
+            text-align: center;
+            padding: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            margin-top: auto;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            nav .nav-right {
+                margin-top: 1rem;
+                gap: 1rem;
+            }
+            .contact-container {
+                flex-direction: column; /* Stack columns vertically */
+                padding: 2.5rem;
+            }
+            .contact-info, .contact-form {
+                min-width: unset; /* Remove min-width for stacking */
+                width: 100%;
+            }
+            .contact-info h2, .contact-form h2 {
+                font-size: 1.8rem;
+            }
+            .contact-info p, .contact-detail span {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav .nav-right {
+                flex-direction: column;
+            }
+            nav .nav-right a {
+                width: 100%;
+                text-align: center;
+            }
+            .contact-container {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+
+    <nav>
+        <div class="nav-left">
+            <a href="index.html">
+                <span>IntelliPatrol</span>
+            </a>
+        </div>
+        <div class="nav-right">
+            <a href="landing.html">Features</a>
+            <a href="contact.html">Contact</a>
+            <a href="index.html#login-section" class="login-link">Login</a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="contact-container">
+            <div class="contact-info">
+                <h2>Get in Touch</h2>
+                <p>We're here to help you revolutionize your industrial safety. Reach out to us through any of the following channels, or fill out the form, and we'll get back to you promptly.</p>
+
+                <div class="contact-detail">
+                    <span class="icon">📍</span>
+                    <span>IntelliPatrol Headquarters <br> 123 Industrial Tech Park, Suite 400 <br> Bengaluru, Karnataka, India</span>
+                </div>
+                <div class="contact-detail">
+                    <span class="icon">📧</span>
+                    <span>Email: reddyganesh6661@gmail.com <br>  pratapreddy906060@gmail.com </span>
+                </div>
+                <div class="contact-detail">
+                    <span class="icon">📞</span>
+                    <span>Phone: +91 8088983178 (Sales) <br> +91 80 8765 4321 (Support)</span>
+                </div>
+                <div class="contact-detail">
+                    <span class="icon">⏰</span>
+                    <span>Business Hours: Mon-Fri, 9:00 AM - 6:00 PM IST</span>
+                </div>
+
+                <p style="margin-top: 1.5rem;">For urgent matters, please use our dedicated support line. For general inquiries, sales, or partnership opportunities, email is preferred.</p>
+            </div>
+
+            <div class="contact-form">
+                <h2>Send Us a Message</h2>
+                <form onsubmit="event.preventDefault(); submitContactForm();">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Your Email</label>
+                        <input type="email" id="contact-email" placeholder="you@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" placeholder="Inquiry about IntelliPatrol" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Your Message</label>
+                        <textarea id="message" rows="5" placeholder="Tell us how we can help you..." required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Submit Message</button>
+                    <div id="contact-msg" style="text-align: center; margin-top: 1rem; font-weight: 500;"></div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2025 IntelliPatrol - Made With Love In India
+    </footer>
+
+    <script>
+        function submitContactForm() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('contact-email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            const contactMsg = document.getElementById('contact-msg');
+
+            contactMsg.style.color = '#f59e0b';
+            contactMsg.textContent = 'Sending message...';
+
+            // Simulate API call
+            setTimeout(() => {
+                if (name && email && subject && message) {
+                    contactMsg.style.color = '#34d399';
+                    contactMsg.textContent = 'Thank you for your message! We will get back to you soon.';
+                    // Clear form
+                    document.getElementById('name').value = '';
+                    document.getElementById('contact-email').value = '';
+                    document.getElementById('subject').value = '';
+                    document.getElementById('message').value = '';
+                } else {
+                    contactMsg.style.color = '#ef4444';
+                    contactMsg.textContent = 'Please fill in all fields.';
+                }
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

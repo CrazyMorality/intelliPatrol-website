@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IntelliPatrol - Sensor Input</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+
+    /* --- KEYFRAME ANIMATIONS --- */
+    @keyframes background-pan {
+      0% { transform: scale(1.05) translate(0, 0); }
+      50% { transform: scale(1.15) translate(1%, -1%); }
+      100% { transform: scale(1.05) translate(0, 0); }
+    }
+    @keyframes text-shimmer {
+      0% { background-position: -100% 0; }
+      100% { background-position: 100% 0; }
+    }
+    @keyframes slideInUp {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { 
+        box-shadow: 0 20px 40px rgba(45, 212, 191, 0.1);
+        transform: translateY(0);
+      }
+      50% { 
+        box-shadow: 0 25px 50px rgba(45, 212, 191, 0.2);
+        transform: translateY(-2px);
+      }
+    }
+
+    /* --- BASE & BODY STYLES --- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #0c1322;
+      color: #e2e8f0;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    }
+
+    /* --- MULTI-LAYERED BACKGROUND --- */
+    .background-container {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: -1;
+      background-image: url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+      filter: blur(3px) grayscale(60%) brightness(0.6);
+      animation: background-pan 45s ease-in-out infinite;
+    }
+    .page-container {
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(30, 41, 59, 0.8) 0%, rgba(12, 19, 34, 0.9) 60%);
+      min-height: 100vh;
+    }
+
+    /* --- NAVIGATION BAR --- */
+    #navbar {
+      background: rgba(12, 19, 34, 0.6);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      height: 70px;
+    }
+    .nav-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: color 0.3s ease, background-color 0.3s ease;
+    }
+    .nav-item:hover {
+      color: #fff;
+      background-color: rgba(45, 212, 191, 0.1);
+    }
+    .nav-item .icon {
+      font-size: 1.2rem;
+      color: #2dd4bf;
+    }
+    .logout-btn {
+      margin-left: auto;
+    }
+    .logout-btn .icon {
+      color: #f87171;
+    }
+    .logout-btn:hover {
+      background-color: rgba(239, 68, 68, 0.1);
+    }
+
+    /* --- MAIN CONTENT AREA --- */
+    .main-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 140px);
+      padding: 3rem 2rem;
+    }
+
+    /* --- SENSOR INPUT FORM CONTAINER --- */
+    .sensor-container {
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 3rem;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+      animation: slideInUp 0.8s ease-out, pulseGlow 6s ease-in-out infinite;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle gradient overlay */
+    .sensor-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(45, 212, 191, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .sensor-container > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .sensor-container h2 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 2rem;
+      text-align: center;
+      color: #fff;
+      background: linear-gradient(135deg, #2dd4bf 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+    }
+
+    /* Shimmer effect for title */
+    .sensor-container h2::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      background-size: 200% 100%;
+      animation: text-shimmer 3s infinite linear;
+    }
+
+    /* --- FORM STYLES --- */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 1rem 1.25rem;
+      font-size: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.8);
+      color: #e2e8f0;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #2dd4bf;
+      background: rgba(15, 23, 42, 0.9);
+      box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1);
+    }
+
+    input::placeholder {
+      color: #64748b;
+    }
+
+    /* --- BUTTON STYLES --- */
+    .btn {
+      width: 100%;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2dd4bf 0%, #3b82f6 100%);
+      color: white;
+      text-shadow: none;
+      box-shadow: 0 8px 25px rgba(45, 212, 191, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(45, 212, 191, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(71, 85, 105, 0.8);
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(71, 85, 105, 1);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* --- RESULT MESSAGE --- */
+    #result {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 12px;
+      font-weight: 500;
+      text-align: center;
+      font-size: 1rem;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      display: none;
+    }
+
+    #result.success {
+      color: #10b981;
+      border-color: rgba(16, 185, 129, 0.3);
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    #result.error {
+      color: #ef4444;
+      border-color: rgba(239, 68, 68, 0.3);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    #result.loading {
+      color: #2dd4bf;
+      border-color: rgba(45, 212, 191, 0.3);
+      background: rgba(45, 212, 191, 0.1);
+    }
+
+    /* --- RESPONSIVE DESIGN --- */
+    @media (max-width: 768px) {
+      .main-content {
+        padding: 2rem 1rem;
+      }
+      
+      .sensor-container {
+        padding: 2rem 1.5rem;
+      }
+      
+      .sensor-container h2 {
+        font-size: 1.8rem;
+      }
+      
+      #navbar {
+        padding: 0 1rem;
+        height: auto;
+        min-height: 70px;
+        flex-wrap: wrap;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .sensor-container {
+        padding: 1.5rem 1rem;
+        margin: 1rem;
+      }
+      
+      .sensor-container h2 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="background-container"></div>
+<div class="page-container">
+  <nav id="navbar"></nav>
+
+  <main class="main-content">
+    <div class="sensor-container">
+      <h2>Sensor Data Input</h2>
+      <form id="sensorForm">
+        <div class="form-group">
+          <label for="temperature">Temperature (°C)</label>
+          <input type="number" id="temperature" required placeholder="Enter temperature">
+        </div>
+        
+        <div class="form-group">
+          <label for="humidity">Humidity (%)</label>
+          <input type="number" id="humidity" required placeholder="Enter humidity percentage">
+        </div>
+        
+        <div class="form-group">
+          <label for="gas">Gas Leak</label>
+          <select id="gas" required>
+            <option value="">Select status</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="fire">Fire Incident</label>
+          <select id="fire" required>
+            <option value="">Select status</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="status">Overall Status</label>
+          <select id="status" required>
+            <option value="">Select status</option>
+            <option value="Normal">Normal</option>
+            <option value="Alert">Alert</option>
+            <option value="Emergency">Emergency</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="region">Region</label>
+          <select id="region" required>
+            <option value="Region A">Region A</option>
+            <option value="Region B">Region B</option>
+            <option value="Region C">Region C</option>
+          </select>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Submit Sensor Data</button>
+        <a href="home.html" class="btn btn-secondary">
+          <span>🏠</span> Return to Home
+        </a>
+        
+        <div id="result"></div>
+      </form>
+    </div>
+  </main>
+</div>
+
+<script>
+  // --- USER AUTHENTICATION & PERSONALIZATION ---
+  const role = localStorage.getItem("role");
+  const userId = localStorage.getItem("user_id");
+
+  if (!role) {
+    window.location.href = "login.html";
+  }
+
+  // --- DYNAMIC NAVIGATION BAR (Same as home.html) ---
+  const navbar = document.getElementById("navbar");
+  let links = `<a href="home.html" class="nav-item"><span class="icon">🏠</span><span>Home</span></a>`;
+
+  const navConfig = {
+    admin: [
+      { href: 'index.html', icon: '📥', text: 'Input' },
+      { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+      { href: 'simulation.html', icon: '⚙️', text: 'Simulation' },
+      { href: 'analytics.html', icon: '📈', text: 'Analytics' },
+      { href: 'robot-map.html', icon: '🗺️', text: 'Robot Map' },
+       { href: 'admin_approval.html', icon: '✅', text: 'Approvals' },
+       { href: 'about.html', icon: 'ℹ️', text: 'About' },
+       { href: 'contact.html', icon: '📞', text: 'Contact Us' },
+      { href: 'admin.html', icon: '👤', text: 'My Profile' }
+    ],
+    user: [
+      { href: 'index.html', icon: '📥', text: 'Input' },
+      { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+      { href: 'robot-map.html', icon: '🗺️', text: 'Robot Map' },
+       { href: 'about.html', icon: 'ℹ️', text: 'About' },
+       { href: 'contact.html', icon: '📞', text: 'Contact Us' },
+      { href: 'user_profile.html', icon: '👤', text: 'My Profile' }
+    ],
+    customer: [
+      { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+      { href: 'simulation.html', icon: '⚙️', text: 'Simulation' },
+      { href: 'robot-map.html', icon: '🗺️', text: 'Robot Map' },
+       { href: 'about.html', icon: 'ℹ️', text: 'About' },
+       { href: 'contact.html', icon: '📞', text: 'Contact Us' },
+      { href: 'customer_profile.html', icon: '👤', text: 'My Profile' }
+    ],
+    stakeholder: [
+      { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+      { href: 'analytics.html', icon: '📈', text: 'Analytics' },
+      { href: 'robot-map.html', icon: '🗺️', text: 'Robot Map' },
+       { href: 'about.html', icon: 'ℹ️', text: 'About' },
+       { href: 'contact.html', icon: '📞', text: 'Contact Us' },
+      { href: 'stakeholder_profile.html', icon: '👤', text: 'My Profile' }
+    ]
+  };
+  
+  if (navConfig[role]) {
+    navConfig[role].forEach(link => {
+      links += `<a href="${link.href}" class="nav-item"><span class="icon">${link.icon}</span><span>${link.text}</span></a>`;
+    });
+  }
+
+  links += `<a href="#" onclick="logout()" class="nav-item logout-btn"><span class="icon">🚪</span><span>Logout</span></a>`;
+  navbar.innerHTML = links;
+
+  function logout() {
+    localStorage.clear();
+    window.location.href = "login.html";
+  }
+
+  // --- FORM SUBMISSION LOGIC (Preserved from original) ---
+  const form = document.getElementById('sensorForm');
+  const resultDiv = document.getElementById('result');
+  
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Show loading state
+    resultDiv.className = 'loading';
+    resultDiv.style.display = 'block';
+    resultDiv.innerText = "⏳ Submitting sensor data...";
+    
+    const data = {
+      sensor_id: "sensor_" + Date.now(),
+      temperature: parseFloat(document.getElementById('temperature').value),
+      humidity: parseFloat(document.getElementById('humidity').value),
+      gas: document.getElementById('gas').value,
+      fire: document.getElementById('fire').value,
+      status: document.getElementById('status').value,
+      region: document.getElementById('region').value
+    };
+    
+    try {
+      const response = await fetch('https://7zi5dxxla65k4ki6mxplqaknnq0tvfqr.lambda-url.us-east-1.on.aws/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        resultDiv.className = 'success';
+        resultDiv.innerText = "✅ Data submitted successfully!";
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 2000);
+      } else {
+        resultDiv.className = 'error';
+        resultDiv.innerText = "❌ " + result.error;
+      }
+    } catch (error) {
+      resultDiv.className = 'error';
+      resultDiv.innerText = '❌ Error: ' + error.message;
+    }
+  });
+
+  // --- ENHANCED INPUT INTERACTIONS ---
+  document.querySelectorAll('input, select').forEach(element => {
+    element.addEventListener('focus', function() {
+      this.style.transform = 'translateY(-1px)';
+      this.style.boxShadow = '0 8px 25px rgba(45, 212, 191, 0.15)';
+    });
+    
+    element.addEventListener('blur', function() {
+      this.style.transform = 'translateY(0)';
+      this.style.boxShadow = 'none';
+    });
+  });
+</script>
+
+</body>
+</html>

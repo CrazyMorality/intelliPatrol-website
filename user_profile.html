@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>IntelliPatrol - User Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* --- KEYFRAME ANIMATIONS from Analytics/Admin page --- */
+        @keyframes background-pan {
+            0% { transform: scale(1.05) translate(0, 0); }
+            50% { transform: scale(1.15) translate(1%, -1%); }
+            100% { transform: scale(1.05) translate(0, 0); }
+        }
+
+        /* Register custom property for smooth gradient animation */
+        @property --angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        /* Animation for the RGB border effect */
+        @keyframes rgb-border-spin {
+            to {
+                --angle: 360deg;
+            }
+        }
+
+        /* Existing fadeIn for overall content */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- BASE & BODY STYLES (Adapted from Analytics) --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: url('simulation1.png') no-repeat center center fixed; /* PRESERVED BACKGROUND */
+            background-size: cover; /* PRESERVED BACKGROUND SIZE */
+            color: #e2e8f0; /* Dark theme text color */
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5); /* Text shadow for better contrast */
+        }
+
+        /* --- MULTI-LAYERED BACKGROUND (Adapted for custom background image) --- */
+        /* This container acts as the blur/grayscale layer *over* your background image */
+        .background-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            background-color: #0c1322; /* Fallback for initial load, less visible with image */
+            /* No background-image here, as body handles it */
+            filter: blur(3px) grayscale(60%) brightness(0.6); /* Apply blur/grayscale to the background image */
+            animation: background-pan 45s ease-in-out infinite;
+        }
+        .page-container {
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.8) 0%, rgba(12, 19, 34, 0.9) 60%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 1s ease-out; /* Apply fadeIn to the content container */
+        }
+
+        /* --- NAVIGATION BAR (from Analytics page) --- */
+        #navbar {
+            background: rgba(12, 19, 34, 0.6);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            height: 70px;
+        }
+        .nav-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+        .nav-item:hover {
+            color: #fff;
+            background-color: rgba(45, 212, 191, 0.1);
+        }
+        .nav-item .icon {
+            font-size: 1.2rem;
+            color: #2dd4bf; /* Teal icon color */
+        }
+        .logout-btn {
+            margin-left: auto;
+        }
+        .logout-btn .icon {
+            color: #f87171; /* Red icon color for logout */
+        }
+        .logout-btn:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        /* --- MAIN CONTENT & SECTION STYLES (adapted from Analytics) --- */
+        main {
+            padding: 4rem 2rem;
+            flex-grow: 1;
+            display: flex;
+            justify-content: center; /* Center the profile container */
+            align-items: center; /* Center vertically if space allows */
+            min-height: calc(100vh - 70px - 64px); /* Subtract nav and footer height */
+        }
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #fff;
+            padding-top: 1rem; /* Add some padding from top */
+        }
+
+        /* --- PROFILE CONTAINER (adapted from Analytics Card) --- */
+        .profile-container {
+            max-width: 800px;
+            width: 100%; /* Ensure it takes full width up to max-width */
+            margin: 2rem auto; /* Vertical margin remains, horizontal centers */
+            padding: 2.5rem 3rem; /* More generous padding */
+            background: rgba(30, 41, 59, 0.85); /* Similar to analysis-card background */
+            backdrop-filter: blur(10px);
+            border-radius: 16px; /* Larger radius for consistency */
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4); /* Stronger shadow */
+            
+            /* --- RGB Lighting Animation --- */
+            border-width: 2px;
+            border-style: solid;
+            border-image-slice: 1;
+            border-image-source: conic-gradient(from var(--angle), #ff00c8, #7a00ff, #002bff, #00ffd5, #48ff00, #fffb00, #ff7300, #ff0000, #ff00c8);
+            animation: rgb-border-spin 4s linear infinite;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2.5rem; /* More space below header */
+        }
+        .profile-header h2 {
+            font-size: 2.2rem; /* Larger font size */
+            margin-bottom: 0.75rem;
+            color: #fff; /* White for main titles */
+        }
+        .profile-header p {
+            color: #cbd5e1; /* Lighter grey for subtitle */
+            font-size: 1.1rem;
+        }
+
+        .profile-section {
+            margin-bottom: 1.8rem; /* Consistent spacing */
+        }
+        .profile-section label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.5rem; /* More space below label */
+            color: #94a3b8; /* A subtle grey from analytics theme */
+            font-size: 0.95rem;
+        }
+        .profile-section p {
+            background: rgba(30, 41, 59, 0.7); /* Darker background for text fields */
+            color: #e2e8f0;
+            padding: 0.9rem 1.2rem; /* More padding for fields */
+            border-radius: 8px; /* Consistent radius */
+            margin: 0;
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+        }
+
+        /* --- FOOTER (from Analytics page) --- */
+        footer {
+            background: transparent;
+            color: #64748b;
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: auto; /* Push footer to bottom */
+        }
+    </style>
+    <link rel="stylesheet" href="responsive.css" />
+</head>
+<body>
+    <div class="background-overlay"></div>
+    <div class="page-container">
+        <nav id="navbar"></nav>
+
+        <main>
+            <div class="profile-container">
+                <h2 class="section-title">👤 User Profile</h2>
+                <div class="profile-header">
+                    <h2><span id="userName">Loading...</span></h2>
+                    <p>IoT Monitoring Agent</p>
+                </div>
+
+                <div class="profile-section">
+                    <label>Email</label>
+                    <p id="email"></p>
+                </div>
+
+                <div class="profile-section">
+                    <label>Role</label>
+                    <p>User | Real-time Data Monitoring</p>
+                </div>
+
+                <div class="profile-section">
+                    <label>Last Login</label>
+                    <p id="lastLogin"></p>
+                </div>
+
+                <div class="profile-section">
+                    <label>Access Level</label>
+                    <p>Limited Access - Can input sensor data and view dashboard insights.</p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            &copy; 2025 IntelliPatrol - A TCS Digital Engineering Initiative
+        </footer>
+    </div>
+
+    <script>
+        const role = localStorage.getItem("role");
+        const userName = localStorage.getItem("user_id");
+        const userEmail = localStorage.getItem("email"); // Get the email from localStorage
+
+        // No specific role check here, user profile is generic for any "user" role type
+        if (!role) { // If no role is found, redirect to login
+            alert("Unauthorized access! Redirecting to login.");
+            window.location.href = "login.html";
+        }
+
+        document.getElementById("userName").textContent = userName || "User";
+        document.getElementById("email").textContent = userEmail || "Not available";
+        document.getElementById("lastLogin").textContent = new Date().toLocaleString(); // Current time for last login
+
+        const navbar = document.getElementById("navbar");
+        let links = `<a href="home.html" class="nav-item"><span class="icon">🏠</span><span>Home</span></a>`;
+        
+        const navConfig = {
+            user: [
+                { href: 'index.html', icon: '📥', text: 'Input' },
+                { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+                { href: 'robot-map.html', icon: '🗺️', text: 'Robot Map' },
+                { href: 'about.html', icon: 'ℹ️', text: 'About' },
+            { href: 'contact.html', icon: '📞', text: 'Contact Us' },
+                { href: 'user_profile.html', icon: '👤', text: 'My Profile' }
+            ]
+        };
+
+        if (navConfig[role]) {
+            navConfig[role].forEach(link => {
+                links += `<a href="${link.href}" class="nav-item"><span class="icon">${link.icon}</span><span>${link.text}</span></a>`;
+            });
+        }
+        links += `<a href="#" onclick="logout()" class="nav-item logout-btn"><span class="icon">🚪</span><span>Logout</span></a>`;
+        navbar.innerHTML = links;
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+</html>

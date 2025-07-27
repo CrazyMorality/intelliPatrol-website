@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>IntelliPatrol - Register</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideInUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1e3a8a, #0f172a);
+      background-attachment: fixed;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 1s ease;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      width: 90%;
+      max-width: 420px;
+      animation: fadeIn 1.5s ease;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+      color: #1e3a8a;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.6rem 0;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #1e40af;
+      box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.3);
+    }
+
+    button {
+      background: #1e40af;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    button:hover {
+      background: #3749c1;
+    }
+
+    a {
+      color: #1e3a8a;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    #msg {
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      padding: 0.75rem;
+      border-radius: 10px;
+      background: #e0f2fe;
+      color: #075985;
+      display: none;
+      animation: slideInUp 0.6s ease forwards;
+    }
+
+    .footer-text {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+  </style>
+  <link rel="stylesheet" href="responsive.css" />.
+</head>
+<body>
+  <div class="card">
+    <h2>📝 Register for IntelliPatrol</h2>
+    <input type="email" id="email" placeholder="Email address" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <select id="role">
+      <option value="user">User</option>
+      <option value="customer">Customer</option>
+      <option value="stakeholder">Stakeholder</option>
+      <option value="admin">Admin</option>
+    </select>
+    
+    <!-- New OTP UI -->
+    <button type="button" onclick="sendOTP()">Send OTP</button>
+    <input type="text" id="otpInput" placeholder="Enter OTP" required />
+    <input type="hidden" id="generatedOtp" />
+    
+    <!-- Final Register Button -->
+    <button onclick="register()">Register</button>
+
+
+    <div id="msg"></div>
+
+    <div class="footer-text">
+      Already registered? <a href="login.html">Login here</a>
+    </div>
+  </div>
+
+  <script>  
+   const otpLambdaURL = "https://wudhgdgdy2nrnlaew5usfv6wdm0zbgnw.lambda-url.us-east-1.on.aws/";
+const registerLambdaURL = "https://fpjhj6shrp5estjkatruldr3z40xulfe.lambda-url.us-east-1.on.aws/";
+
+async function sendOTP() {
+  const email = document.getElementById("email").value.trim();
+  const msg = document.getElementById("msg");
+  msg.style.display = "block";
+
+  if (!email.includes('@')) {
+    msg.style.background = "#fee2e2";
+    msg.style.color = "#b91c1c";
+    msg.textContent = "❗ Enter a valid email before sending OTP.";
+    return;
+  }
+
+  try {
+    const res = await fetch(otpLambdaURL, {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ to_email: email })
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    const data = await res.json();
+
+    if (data.otp) {
+      document.getElementById("generatedOtp").value = data.otp;
+      msg.style.background = "#dcfce7";
+      msg.style.color = "#166534";
+      msg.textContent = "✅ OTP sent to your email.";
+    } else {
+      msg.style.background = "#fee2e2";
+      msg.style.color = "#b91c1c";
+      msg.textContent = "❌ Failed to send OTP. Try again.";
+    }
+  } catch (e) {
+    msg.style.background = "#fee2e2";
+    msg.style.color = "#b91c1c";
+    msg.textContent = "❌ Error sending OTP. Check console for details.";
+    console.error("OTP Error:", e);
+  }
+}
+
+async function register() {
+  const msg = document.getElementById("msg");
+  msg.style.display = "block";
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const role = document.getElementById("role").value;
+  const enteredOtp = document.getElementById("otpInput").value.trim();
+  const actualOtp = document.getElementById("generatedOtp").value.trim();
+
+  if (enteredOtp !== actualOtp) {
+    msg.style.background = "#fee2e2";
+    msg.style.color = "#b91c1c";
+    msg.textContent = "❗ Invalid OTP. Please try again.";
+    return;
+  }
+
+  try {
+    const res = await fetch(registerLambdaURL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id: email,
+        password,
+        role,
+        status: "pending"
+      })
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      msg.style.background = "#dcfce7";
+      msg.style.color = "#166534";
+      msg.textContent = "🎉 Registration successful! Await admin approval.";
+      document.getElementById("email").value = "";
+      document.getElementById("password").value = "";
+      document.getElementById("otpInput").value = "";
+    } else {
+      msg.style.background = "#fee2e2";
+      msg.style.color = "#b91c1c";
+      msg.textContent = data.message || "⚠️ Registration failed.";
+    }
+  } catch (e) {
+    msg.style.background = "#fee2e2";
+    msg.style.color = "#b91c1c";
+    msg.textContent = "❌ Error during registration. Please try again.";
+    console.error("Registration Error:", e);
+  }
+}
+  </script>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IntelliPatrol - About Us</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Orbitron:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    /* Keyframe Animations */
+    @keyframes background-pan {
+      0% { transform: scale(1.05) translate(0, 0); }
+      50% { transform: scale(1.15) translate(1%, -1%); }
+      100% { transform: scale(1.05) translate(0, 0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-30px);}
+      to { opacity: 1; transform: translateX(0);}
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px);}
+    }
+    @keyframes subtlePulse {
+      0%, 100% { opacity: 0.21; transform: scale(1);}
+      50% { opacity: 0.44; transform: scale(1.02);}
+    }
+    @keyframes toast-show {
+      from { opacity: 0; transform: translateY(-20px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    /* --- Basic Layout --- */
+    * { margin:0; padding:0; box-sizing: border-box;}
+    html { scroll-behavior: smooth;}
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: url('simulation.png') no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      color: #e2e8f0;
+      position: relative;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.36);
+      display: flex; flex-direction: column;
+      z-index: 1;
+    }
+
+    /* Animated blurred overlay */
+    body::before {
+      content:'';
+      position: fixed; inset: 0;
+      z-index:0;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(120,119,198,0.23) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255,118,117,0.15) 0%, transparent 40%);
+      animation: subtlePulse 11s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    /* Floating particles for depth */
+    .particle {position:absolute;background:rgba(255,255,255,0.1);border-radius:50%;pointer-events:none;animation:float 8s infinite;z-index:2;}
+    .particle:nth-child(1){width:12px;height:12px;top:23%;left:12%;animation-delay:0s;}
+    .particle:nth-child(2){width:16px;height:16px;top:65%;left:79%;animation-delay:2.5s;}
+    .particle:nth-child(3){width:10px;height:10px;top:85%;left:21%;animation-delay:4s;}
+    .particle:nth-child(4){width:14px;height:14px;top:39%;left:66%;animation-delay:1.7s;}
+
+    /* Dynamic Navbar */
+    #navbar {
+      background: rgba(12, 19, 34, 0.6);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.11);
+      padding: 1.1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.09rem;
+      animation: slideInLeft 0.8s ease;
+    }
+    .nav-item {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: color 0.3s, background-color 0.3s;
+      user-select: none;
+    }
+    .nav-item:hover {
+      color: #fff;
+      background-color: rgba(45, 212, 191, 0.1);
+    }
+    .nav-item .icon { font-size: 1.2rem; color: #2dd4bf; }
+    .logout-btn { margin-left: auto;}
+    .logout-btn .icon { color: #f87171; }
+    .logout-btn:hover { background-color: rgba(239,68,68,0.1); color:#f43f5e;}
+
+    /* Page header */
+    header {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 2.5rem auto 2rem;
+      text-align: center;
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px #3b82f6bb;
+      font-family: 'Orbitron', Inter, sans-serif;
+      animation: fadeInUp 0.8s ease forwards;
+      user-select: none;
+    }
+
+    /* Glassy Content Container */
+    .container {
+      background: rgba(255,255,255,0.09);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      max-width: 900px;
+      margin: 0 auto 3rem auto;
+      padding: 2.3rem 2.2rem 2rem;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.16), inset 0 0 0 1px rgba(255,255,255,0.14);
+      animation: fadeInUp 1.2s ease forwards;
+      color: #e1e6eb;
+      font-family: 'Poppins', sans-serif;
+      line-height: 1.62;
+      user-select: text;
+    }
+
+    /* Section Titles */
+    .section-title {
+      font-family:'Orbitron', monospace;
+      font-size: 2.1rem;
+      color: #a855f7;
+      font-weight: 700;
+      margin-bottom: 1.8rem;
+      text-align: center;
+      text-shadow: 0 0 10px #a855f7bb;
+      user-select: none;
+    }
+
+    /* Paragraphs */
+    p {
+      font-size: 1.05rem;
+      margin-bottom: 1.3rem;
+    }
+
+    /* Highlighted keywords */
+    .highlight {
+      background: linear-gradient(135deg, #60a5fa, #34d399, #a855f7, #60a5fa);
+      -webkit-background-clip: text;
+      color: transparent;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      user-select: none;
+    }
+
+    /* Footer */
+    footer {
+      background: transparent;
+      color: #94a3b8;
+      text-align: center;
+      padding: 1.8rem 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.09);
+      margin-top: auto;
+      font-family: 'Inter', sans-serif;
+      user-select: none;
+      font-size: 1rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .container { max-width: 95%; padding: 2rem 1rem; }
+      header { font-size: 2rem; margin: 2rem auto 1.5rem; }
+      .section-title { font-size: 1.8rem; margin-bottom: 1.3rem; }
+      p { font-size: 1rem; }
+    }
+    @media (max-width: 480px) {
+      .container {
+        padding: 1.5rem 1rem 1rem;
+      }
+      header { font-size: 1.7rem; }
+      .section-title { font-size: 1.6rem; }
+      p { font-size: 0.95rem; }
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Floating particles for subtle animated background glow -->
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+
+  <!-- Dynamic role-based navbar -->
+  <nav id="navbar"></nav>
+
+  <!-- Page header -->
+  <header>About IntelliPatrol</header>
+
+  <!-- Content Container -->
+  <section class="container" aria-label="About IntelliPatrol">
+    <h2 class="section-title">Our Mission</h2>
+    <p>
+      At <span class="highlight">IntelliPatrol</span>, we aim to revolutionize industrial safety using the power of <span class="highlight">advanced AI</span> and <span class="highlight">autonomous robotics</span>. Our platform provides real-time monitoring, intelligent alerts, and seamless automation designed specifically for modern warehouses.
+    </p>
+
+    <h2 class="section-title">What We Offer</h2>
+    <p>
+      IntelliPatrol integrates cutting-edge technologies such as SLAM navigation, sensor data analytics, and AWS-powered backend infrastructure. Our system is designed for maximum reliability, security, and scalability to meet the ever-evolving demands of industrial safety.
+    </p>
+
+    <h2 class="section-title">Our Team</h2>
+    <p>
+      Our diverse team of engineers, data scientists, and safety experts collaborate to build innovative solutions that enhance operational efficiency and protect workplace environments. Backed by the TCS Digital Engineering initiative, we are committed to excellence and innovation.
+    </p>
+
+    <h2 class="section-title">Contact Us</h2>
+    <p>
+      Have questions or want to learn more? Visit the <a href="contact.html" style="color:#60a5fa; text-decoration: underline;">Contact Page</a> or explore our other services through the navigation bar above.
+    </p>
+  </section>
+
+  <footer>
+    &copy; 2025 IntelliPatrol - A Digital Engineering Initiative
+  </footer>
+
+  <script>
+    // Dynamic NAVBAR script identical to user approval and home pages
+    const role = localStorage.getItem("role");
+    if (!role) window.location.href = "login.html";
+
+    const navbar = document.getElementById("navbar");
+    let links = `<a href="home.html" class="nav-item"><span class="icon">🏠</span><span>Home</span></a>`;
+
+    const navConfig = {
+      admin: [
+        { href: 'index.html', icon: '📥', text: 'Input' },
+        { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+        { href: 'simulation.html', icon: '⚙️', text: 'Simulation' },
+        { href: 'analytics.html', icon: '📈', text: 'Analytics' },
+        { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
+        { href: 'admin.html', icon: '👤', text: 'My Profile' },
+        { href: 'admin_approval.html', icon: '✅', text: 'Approvals' },
+        { href: 'about.html', icon: 'ℹ️', text: 'About' },
+        { href: 'contact.html', icon: '📞', text: 'Contact Us' }
+      ],
+      user: [
+        { href: 'index.html', icon: '📥', text: 'Input' },
+        { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+        { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
+        { href: 'user_profile.html', icon: '👤', text: 'My Profile' },
+        { href: 'about.html', icon: 'ℹ️', text: 'About' },
+        { href: 'contact.html', icon: '📞', text: 'Contact Us' }
+      ],
+      customer: [
+        { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+        { href: 'simulation.html', icon: '⚙️', text: 'Simulation' },
+        { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
+        { href: 'customer_profile.html', icon: '👤', text: 'My Profile' },
+        { href: 'about.html', icon: 'ℹ️', text: 'About' },
+        { href: 'contact.html', icon: '📞', text: 'Contact Us' }
+      ],
+      stakeholder: [
+        { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+        { href: 'analytics.html', icon: '📈', text: 'Analytics' },
+        { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
+        { href: 'stakeholder_profile.html', icon: '👤', text: 'My Profile' },
+        { href: 'about.html', icon: 'ℹ️', text: 'About' },
+        { href: 'contact.html', icon: '📞', text: 'Contact Us' }
+      ]
+    };
+
+    if (navConfig[role]) {
+      navConfig[role].forEach(link => {
+        links += `<a href="${link.href}" class="nav-item"><span class="icon">${link.icon}</span><span>${link.text}</span></a>`;
+      });
+    }
+
+    links += `<a href="#" onclick="logout()" class="nav-item logout-btn"><span class="icon">🚪</span><span>Logout</span></a>`;
+    navbar.innerHTML = links;
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>

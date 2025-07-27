@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IntelliPatrol - Simulation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+
+    /* --- KEYFRAME ANIMATIONS --- */
+    @keyframes background-pan {
+      0% { transform: scale(1.05) translate(0, 0); }
+      50% { transform: scale(1.15) translate(1%, -1%); }
+      100% { transform: scale(1.05) translate(0, 0); }
+    }
+
+    /* --- BASE & BODY STYLES --- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #0c1322; /* Dark fallback color */
+      color: #e2e8f0;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    }
+
+    /* --- MULTI-LAYERED BACKGROUND --- */
+    .background-container {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: -1;
+      /* Using a placeholder image from Unsplash. Replace with your 'simulation.png' if you prefer. */
+      background-image: url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+      filter: blur(3px) grayscale(60%) brightness(0.6);
+      animation: background-pan 45s ease-in-out infinite;
+    }
+    .page-container {
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(30, 41, 59, 0.8) 0%, rgba(12, 19, 34, 0.9) 60%);
+      min-height: 100vh;
+    }
+
+    /* --- NAVIGATION BAR --- */
+    #navbar {
+      background: rgba(12, 19, 34, 0.6);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      height: 70px;
+    }
+    .nav-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: color 0.3s ease, background-color 0.3s ease;
+    }
+    .nav-item:hover {
+      color: #fff;
+      background-color: rgba(45, 212, 191, 0.1);
+    }
+    .nav-item .icon {
+      font-size: 1.2rem;
+      color: #2dd4bf;
+    }
+    .logout-btn {
+      margin-left: auto;
+    }
+    .logout-btn .icon {
+      color: #f87171;
+    }
+    .logout-btn:hover {
+      background-color: rgba(239, 68, 68, 0.1);
+    }
+
+    /* --- MAIN CONTENT & SECTION STYLES --- */
+    main {
+      padding: 4rem 2rem;
+    }
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 3rem;
+      color: #fff;
+    }
+
+    /* --- SIMULATION PAGE SPECIFIC STYLES --- */
+    .simulation-controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: rgba(30, 41, 59, 0.7);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .simulation-controls label {
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+
+    .simulation-controls select {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background-color: #0c1322;
+      color: #e2e8f0;
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .simulation-controls select:focus {
+        outline: none;
+        border-color: #2dd4bf;
+        box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.3);
+    }
+
+    .sim-button {
+      border: none;
+      color: white;
+      text-shadow: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.9rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: linear-gradient(135deg, #2dd4bf 0%, #3b82f6 100%);
+      box-shadow: 0 4px 15px rgba(45, 212, 191, 0.15);
+    }
+    .sim-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(45, 212, 191, 0.25);
+    }
+
+    .status-message {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #2dd4bf;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      height: 1.2em; /* prevent layout shift */
+    }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .chart-card {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .chart-card h3 {
+      text-align: center;
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+      color: #fff;
+    }
+
+    canvas {
+      max-height: 350px;
+      width: 100% !important;
+    }
+
+    /* --- FOOTER --- */
+    footer {
+      background: transparent;
+      color: #64748b;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body>
+
+<div class="background-container"></div>
+<div class="page-container">
+  <nav id="navbar"></nav>
+
+  <main>
+    <h2 class="section-title">📡 Automatic Sensor Data Simulation</h2>
+
+    <div class="simulation-controls">
+      <label for="regionSelect"><strong>Select Region:</strong></label>
+      <select id="regionSelect">
+        <option value="Region A" selected>Region A</option>
+        <option value="Region B">Region B</option>
+        <option value="Region C">Region C</option>
+      </select>
+      
+      <button onclick="startSimulation()" class="sim-button">Start Simulation</button>
+      <button onclick="stopSimulation()" class="sim-button">Stop Simulation</button>
+      <button onclick="downloadCSV()" class="sim-button">Download CSV</button>
+      <button onclick="clearCharts()" class="sim-button">Clear Graph</button>
+    </div>
+
+    <div id="statusMessage" class="status-message"></div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>Sensor Data (Bar Chart)</h3>
+        <canvas id="barChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Sensor Status Distribution (Pie Chart)</h3>
+        <canvas id="pieChart"></canvas>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 IntelliPatrol - A  Digital Engineering Initiative
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // --- USER AUTHENTICATION & DYNAMIC NAVIGATION ---
+  const role = localStorage.getItem("role");
+
+  if (!role) {
+    window.location.href = "login.html";
+  }
+
+  const navbar = document.getElementById("navbar");
+  let links = `<a href="home.html" class="nav-item"><span class="icon">🏠</span><span>Home</span></a>`;
+
+  const navConfig = {
+    admin: [
+        { href: 'index.html', icon: '📥', text: 'Input' },
+            { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+            { href: 'simulation.html', icon: '⚙️', text: 'Simulation' },
+            { href: 'analytics.html', icon: '📈', text: 'Analytics' },
+            { href: 'robot-map.html', icon: '🗺️', text: 'Live Map' },
+             { href: 'admin_approval.html', icon: '✅', text: 'Approvals' },
+              { href: 'about.html', icon: 'ℹ️', text: 'About' },
+            { href: 'contact.html', icon: '📞', text: 'Contact Us' },
+            { href: 'admin.html', icon: '👤', text: 'My Profile' }
+    ],
+    user: [
+      { href: 'index.html', icon: '📥', text: 'Input' },
+      { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+      { href: 'robot-map.html', icon: '🗺️', text: 'Robot Map' },
+       { href: 'about.html', icon: 'ℹ️', text: 'About' },
+      { href: 'contact.html', icon: '📞', text: 'Contact Us' },
+      { href: 'user_profile.html', icon: '👤', text: 'My Profile' }
+    ],
+    customer: [
+      { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+      { href: 'simulation.html', icon: '⚙️', text: 'Simulation' },
+      { href: 'robot-map.html', icon: '🗺️', text: 'Robot Map' },
+       { href: 'about.html', icon: 'ℹ️', text: 'About' },
+      { href: 'contact.html', icon: '📞', text: 'Contact Us' },
+      { href: 'customer_profile.html', icon: '👤', text: 'My Profile' }
+    ],
+    stakeholder: [
+      { href: 'dashboard.html', icon: '📊', text: 'Dashboard' },
+      { href: 'analytics.html', icon: '📈', text: 'Analytics' },
+      { href: 'robot-map.html', icon: '🗺️', text: 'Robot Map' },
+       { href: 'about.html', icon: 'ℹ️', text: 'About' },
+      { href: 'contact.html', icon: '📞', text: 'Contact Us' },
+      { href: 'stakeholder_profile.html', icon: '👤', text: 'My Profile' }
+    ]
+  };
+  
+  if (navConfig[role]) {
+    navConfig[role].forEach(link => {
+      links += `<a href="${link.href}" class="nav-item"><span class="icon">${link.icon}</span><span>${link.text}</span></a>`;
+    });
+  }
+
+  links += `<a href="#" onclick="logout()" class="nav-item logout-btn"><span class="icon">🚪</span><span>Logout</span></a>`;
+  navbar.innerHTML = links;
+
+  function logout() {
+    localStorage.clear();
+    window.location.href = "login.html";
+  }
+
+  // --- SIMULATION & CHART LOGIC ---
+  let intervalId;
+  const lambdaUrl = 'https://7zi5dxxla65k4ki6mxplqaknnq0tvfqr.lambda-url.us-east-1.on.aws';
+  const statusMessage = document.getElementById('statusMessage');
+
+  function showStatusMessage(text) {
+    statusMessage.textContent = text;
+    statusMessage.style.opacity = 1;
+    setTimeout(() => { statusMessage.style.opacity = 0; }, 3000);
+  }
+
+  function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function getRandomOption(options) {
+    return options[Math.floor(Math.random() * options.length)];
+  }
+
+  function startSimulation() {
+    if (intervalId) return;
+    sendRandomData(); // Send data immediately on start
+    intervalId = setInterval(sendRandomData, 5000);
+    showStatusMessage("✅ Simulation Started");
+  }
+
+  function stopSimulation() {
+    clearInterval(intervalId);
+    intervalId = null;
+    showStatusMessage("⛔ Simulation Stopped");
+  }
+
+  function sendRandomData() {
+    const now = new Date();
+    const timestamp = now.toISOString();
+    const region = document.getElementById("regionSelect").value;
+
+    const data = {
+      sensor_id: 'sensor_' + now.getTime(),
+      temperature: getRandomInt(10, 60),
+      humidity: getRandomInt(30, 90),
+      gas: getRandomOption(['Yes', 'No']),
+      fire: getRandomOption(['Yes', 'No']),
+      status: getRandomOption(['Normal', 'Alert', 'Emergency']),
+      region: region,
+      timestamp: timestamp
+    };
+
+    fetch(lambdaUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+      .then(res => res.json())
+      .then(() => updateCharts()) // Update charts after successful send
+      .catch(console.error);
+  }
+
+  const barCtx = document.getElementById('barChart').getContext('2d');
+  const pieCtx = document.getElementById('pieChart').getContext('2d');
+
+  const chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#e2e8f0' }}},
+      scales: {
+          y: {
+              beginAtZero: true,
+              ticks: { color: '#94a3b8' },
+              grid: { color: 'rgba(255, 255, 255, 0.1)' }
+          },
+          x: {
+              ticks: { color: '#94a3b8' },
+              grid: { color: 'rgba(255, 255, 255, 0.1)' }
+          }
+      }
+  };
+
+  const barChart = new Chart(barCtx, {
+    type: 'bar',
+    data: {
+      labels: [],
+      datasets: [
+        { label: 'Temperature (°C)', data: [], backgroundColor: '#3b82f6' },
+        { label: 'Humidity (%)', data: [], backgroundColor: '#10b981' }
+      ]
+    },
+    options: chartOptions
+  });
+
+  const pieChart = new Chart(pieCtx, {
+    type: 'pie',
+    data: {
+      labels: ['Normal', 'Alert', 'Emergency'],
+      datasets: [{
+        data: [0, 0, 0],
+        backgroundColor: ['#34d399', '#facc15', '#ef4444'],
+        borderColor: '#0c1322',
+        borderWidth: 2
+      }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'top', labels: { color: '#e2e8f0' }}}
+    }
+  });
+
+  function updateCharts() {
+    const selectedRegion = document.getElementById("regionSelect").value;
+
+    fetch(lambdaUrl + '/all')
+      .then(res => res.json())
+      .then(data => {
+        const filtered = data.filter(entry => entry.region === selectedRegion);
+        const recent = filtered.slice(-20); // Show last 20 entries for the region
+
+        // Update Bar Chart
+        barChart.data.labels = recent.map(entry => new Date(entry.timestamp).toLocaleTimeString());
+        barChart.data.datasets[0].data = recent.map(entry => entry.temperature);
+        barChart.data.datasets[1].data = recent.map(entry => entry.humidity);
+        barChart.update();
+
+        // Update Pie Chart
+        const counts = { Normal: 0, Alert: 0, Emergency: 0 };
+        recent.forEach(entry => { if(counts[entry.status] !== undefined) counts[entry.status]++; });
+        pieChart.data.datasets[0].data = [counts.Normal, counts.Alert, counts.Emergency];
+        pieChart.update();
+      })
+      .catch(console.error);
+  }
+
+  function clearCharts() {
+    barChart.data.labels = [];
+    barChart.data.datasets.forEach(ds => ds.data = []);
+    barChart.update();
+
+    pieChart.data.datasets[0].data = [0, 0, 0];
+    pieChart.update();
+    showStatusMessage("Graphs Cleared");
+  }
+
+  function downloadCSV() {
+    fetch(lambdaUrl + '/all')
+      .then(res => res.json())
+      .then(data => {
+        const region = document.getElementById("regionSelect").value;
+        const filtered = data.filter(row => row.region === region);
+        let csv = 'Sensor ID,Temperature,Humidity,Gas,Fire,Status,Region,Timestamp\n';
+        filtered.forEach(row => {
+          csv += `${row.sensor_id},${row.temperature},${row.humidity},${row.gas},${row.fire},${row.status},${row.region},${row.timestamp}\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `simulation_data_${region.replace(/\s+/g, '_')}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+  }
+
+  // Initial load and listeners
+  document.getElementById("regionSelect").addEventListener("change", updateCharts);
+  updateCharts();
+  setInterval(updateCharts, 5000); // Periodically refresh data
+</script>
+
+</body>
+</html>
